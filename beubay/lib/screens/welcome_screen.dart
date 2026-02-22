@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:beubay/auth/verify_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -39,14 +40,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         curve: Curves.easeInOut,
       );
     } else {
-      // Navigate to next screen (e.g., login or home)
-      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => NextScreen()));
+      // Navigate to verify screen (OTP screen)
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const VerifyScreen()),
+      );
     }
   }
 
   void _skipOnboarding() {
-    // Navigate to next screen (e.g., login or home)
-    // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => NextScreen()));
+    // Navigate to verify screen (OTP screen)
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const VerifyScreen()),
+    );
   }
 
   @override
