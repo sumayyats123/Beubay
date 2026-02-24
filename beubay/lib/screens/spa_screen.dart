@@ -9,6 +9,7 @@ import 'package:beubay/widgets/common_sort_filter_menu.dart';
 import 'package:beubay/services/api_client.dart';
 import 'package:beubay/screens/location_picker_screen.dart';
 import 'package:beubay/screens/profile_screen.dart';
+import 'package:beubay/screens/service_detail_screen.dart';
 
 class SpaScreen extends StatefulWidget {
   const SpaScreen({super.key});
@@ -55,6 +56,39 @@ class _SpaScreenState extends State<SpaScreen> {
 
     // TODO: Load spa services from API
     // _loadWellnessSpaServices();
+
+    // Placeholder spa services for testing
+    setState(() {
+      _wellnessSpaServices = [
+        {
+          'title': 'Serenity Spa',
+          'description': 'Relaxing massage and wellness treatments',
+          'imageUrl': null,
+          'distance': '0.5kms',
+          'serviceType': 'Premium',
+          'rating': '4.7',
+          'discount': '25% off',
+        },
+        {
+          'title': 'Wellness Center',
+          'description': 'Complete spa and wellness experience',
+          'imageUrl': null,
+          'distance': '1.0kms',
+          'serviceType': 'Luxury',
+          'rating': '4.8',
+          'discount': '30% off',
+        },
+        {
+          'title': 'Tranquil Spa',
+          'description': 'Aromatherapy and relaxation therapies',
+          'imageUrl': null,
+          'distance': '0.7kms',
+          'serviceType': 'Standard',
+          'rating': '4.5',
+          'discount': '20% off',
+        },
+      ];
+    });
   }
 
   Future<void> _handleLocationTap() async {
@@ -291,169 +325,193 @@ class _SpaScreenState extends State<SpaScreen> {
   }
 
   Widget _buildServiceCard(Map<String, dynamic> service) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: Colors.grey[200]!),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image with discount tag
-          Stack(
-            children: [
-              Container(
-                height: 200,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
-                  ),
-                ),
-                child: service['imageUrl'] != null
-                    ? ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(15),
-                          topRight: Radius.circular(15),
-                        ),
-                        child: Image.network(
-                          service['imageUrl'],
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Center(
-                              child: Icon(
-                                Icons.image_not_supported,
-                                color: Colors.grey,
-                                size: 40,
-                              ),
-                            );
-                          },
-                        ),
-                      )
-                    : const Center(
-                        child: Icon(Icons.spa, color: Colors.grey, size: 40),
-                      ),
+    return GestureDetector(
+      onTap: () {
+        print('Spa card tapped: ${service['title'] ?? service['name']}');
+        print('Service data: $service');
+        Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    ServiceDetailScreen(service: service, serviceType: 'spa'),
               ),
-              // Discount tag
-              Positioned(
-                top: 10,
-                right: 10,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF9370DB),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    service['discount'] ?? 'Get 20% off',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          // Service details
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            )
+            .then((_) {
+              print('Navigation completed');
+            })
+            .catchError((error) {
+              print('Navigation error: $error');
+            });
+      },
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: Colors.grey[200]!),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image with discount tag
+            Stack(
               children: [
-                // Title
-                Text(
-                  service['title'] ?? '',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1A1A1A),
+                Container(
+                  height: 200,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(15),
+                      topRight: Radius.circular(15),
+                    ),
                   ),
+                  child: service['imageUrl'] != null
+                      ? ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(15),
+                            topRight: Radius.circular(15),
+                          ),
+                          child: Image.network(
+                            service['imageUrl'],
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Center(
+                                child: Icon(
+                                  Icons.image_not_supported,
+                                  color: Colors.grey,
+                                  size: 40,
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      : const Center(
+                          child: Icon(Icons.spa, color: Colors.grey, size: 40),
+                        ),
                 ),
-                const SizedBox(height: 8),
-                // Description
-                Text(
-                  service['description'] ?? '',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[700],
-                    height: 1.4,
+                // Discount tag
+                Positioned(
+                  top: 10,
+                  right: 10,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF9370DB),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      service['discount'] ?? 'Get 20% off',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 12),
-                // Metrics
-                Row(
-                  children: [
-                    // Distance
-                    Row(
-                      children: [
-                        const Icon(Icons.person, size: 16, color: Colors.grey),
-                        const SizedBox(width: 4),
-                        Text(
-                          service['distance'] ?? '0.10kms',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 15),
-                    // Service Type
-                    Row(
-                      children: [
-                        const Icon(Icons.bolt, size: 16, color: Colors.grey),
-                        const SizedBox(width: 4),
-                        Text(
-                          service['serviceType'] ?? 'Urban',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 15),
-                    // Rating
-                    Row(
-                      children: [
-                        const Icon(Icons.star, size: 16, color: Colors.amber),
-                        const SizedBox(width: 4),
-                        Text(
-                          service['rating'] ?? '4.4',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
                 ),
               ],
             ),
-          ),
-        ],
+
+            // Service details
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Text(
+                    service['title'] ?? '',
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1A1A1A),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  // Description
+                  Text(
+                    service['description'] ?? '',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[700],
+                      height: 1.4,
+                    ),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 12),
+                  // Metrics
+                  Row(
+                    children: [
+                      // Distance
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.person,
+                            size: 16,
+                            color: Colors.grey,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            service['distance'] ?? '0.10kms',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 15),
+                      // Service Type
+                      Row(
+                        children: [
+                          const Icon(Icons.bolt, size: 16, color: Colors.grey),
+                          const SizedBox(width: 4),
+                          Text(
+                            service['serviceType'] ?? 'Urban',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 15),
+                      // Rating
+                      Row(
+                        children: [
+                          const Icon(Icons.star, size: 16, color: Colors.amber),
+                          const SizedBox(width: 4),
+                          Text(
+                            service['rating'] ?? '4.4',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

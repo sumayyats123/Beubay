@@ -204,4 +204,28 @@ class ApiClient {
       return [];
     }
   }
+
+  // Get service detail (salon, spa, or clinic)
+  static Future<Map<String, dynamic>?> getServiceDetail(
+    String serviceId,
+    String serviceType,
+  ) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/$serviceType/$serviceId'),
+        headers: getHeaders(),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          return Map<String, dynamic>.from(data['data']);
+        }
+      }
+      return null;
+    } catch (e) {
+      print('Error fetching service detail: $e');
+      return null;
+    }
+  }
 }
