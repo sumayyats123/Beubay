@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:beubay/screens/spa_screen.dart';
-import 'package:beubay/screens/salon_screen.dart';
-import 'package:beubay/screens/clinic_screen.dart';
-import 'package:beubay/screens/cosmetic_screen.dart';
+import 'package:beubay/widgets/common_header.dart';
+import 'package:beubay/widgets/common_promotional_banner.dart';
+import 'package:beubay/widgets/common_bottom_nav_bar.dart';
+import 'package:beubay/widgets/common_gradient_container.dart';
+import 'package:beubay/services/api_client.dart';
+import 'package:beubay/screens/location_picker_screen.dart';
+import 'package:beubay/screens/profile_screen.dart';
+import 'package:beubay/screens/search_results_screen.dart';
+import 'package:beubay/screens/appointments_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,25 +27,100 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Map<String, dynamic>> _salonsNearYou = [];
   List<Map<String, dynamic>> _beautyProducts = [];
 
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
-    // TODO: Load data from API
-    // _loadPromotionalBanners();
-    // _loadServiceCategories();
+    _loadDataFromApi();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadDataFromApi() async {
+    // Load promotional banners from API
+    final banners = await ApiClient.getPromotionalBanners();
+    if (banners.isNotEmpty) {
+      setState(() {
+        _promotionalBanners = banners;
+      });
+    } else {
+      // Fallback placeholder data
+      setState(() {
+        _promotionalBanners = [
+          {
+            'title': 'Welcome to Beubay',
+            'subtitle': 'Your Beauty & Wellness Partner',
+            'buttonText': 'Explore Now',
+            'footerText': 'Book your first appointment',
+            'imageUrl': null,
+          },
+        ];
+      });
+    }
+
+    // Load service categories from API
+    final categories = await ApiClient.getServiceCategories();
+    if (categories.isNotEmpty) {
+      setState(() {
+        _serviceCategories = categories;
+      });
+    }
+
+    // TODO: Load salons and products from API
     // _loadSalonsNearYou();
     // _loadBeautyProducts();
+  }
 
-    // Placeholder data for home screen
-    _promotionalBanners = [
-      {
-        'title': 'Welcome to Beubay',
-        'subtitle': 'Your Beauty & Wellness Partner',
-        'buttonText': 'Explore Now',
-        'footerText': 'Book your first appointment',
-        'imageUrl': null,
-      },
-    ];
+  Future<void> _handleLocationTap() async {
+    final selectedLocation = await Navigator.push<String>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LocationPickerScreen(
+          currentLocation: _selectedLocation,
+          onLocationSelected: (location) {
+            setState(() {
+              _selectedLocation = location;
+            });
+          },
+        ),
+      ),
+    );
+    if (selectedLocation != null) {
+      setState(() {
+        _selectedLocation = selectedLocation;
+      });
+    }
+  }
+
+  Future<void> _handleProfileTap() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ProfileScreen()),
+    );
+  }
+
+  void _handleSearch() {
+    final query = _searchController.text.trim();
+    if (query.isNotEmpty) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SearchResultsScreen(searchQuery: query),
+        ),
+      );
+    }
+  }
+
+  void _handleAppointmentsTap() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const AppointmentsScreen()),
+    );
   }
 
   @override
@@ -59,68 +139,257 @@ class _HomeScreenState extends State<HomeScreen> {
         0xFFF8F8F8,
       ), // Exact light grey background from design
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+        physics: const AlwaysScrollableScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top Section with Purple Gradient (Header, Search, Banner, What Are You Looking For)
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    const Color(0xFF9370DB), // Exact purple at top
-                    const Color(0xFF9370DB), // Exact purple continues
-                    const Color(
-                      0xFF9370DB,
-                    ).withOpacity(0.9), // Gradually decreasing
-                    const Color(0xFF9370DB).withOpacity(0.7), // More decrease
-                    const Color(
-                      0xFF9370DB,
-                    ).withOpacity(0.5), // Further decrease
-                    const Color(0xFF9370DB).withOpacity(
-                      0.3,
-                    ), // Light purple spreading through top containers
-                    const Color(
-                      0xFFF8F8F8,
-                    ), // White/background color starts at bottom containers
-                  ],
-                  stops: const [
-                    0.0,
-                    0.2, // Keep exact purple through header/search
-                    0.35, // Start decreasing at banner
-                    0.45, // Continue decreasing
-                    0.55, // More decrease
-                    0.72, // Light purple spreads more through top containers
-                    0.78, // White starts for bottom containers
-                  ],
-                ),
-              ),
+            // Top Section with Purple Gradient (Header, Search, Banner, Categories)
+            CommonGradientContainer(
+              colors: [
+                const Color(0xFF9370DB), // Exact purple at top
+                const Color(0xFF9370DB), // Exact purple continues
+                const Color(0xFF9370DB).withOpacity(0.95),
+                const Color(0xFF9370DB).withOpacity(0.9),
+                const Color(0xFF9370DB).withOpacity(0.7),
+                const Color(0xFF9370DB).withOpacity(0.5),
+                const Color(0xFF9370DB).withOpacity(0.3),
+                const Color(
+                  0xFFF8F8F8,
+                ), // Background color starts after first two containers
+              ],
+              stops: const [0.0, 0.15, 0.25, 0.4, 0.55, 0.75, 0.9, 1.0],
               child: Column(
-                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Top Header Section - inside gradient
-                  _buildHeader(),
+                  Transform.translate(
+                    offset: const Offset(0, -10),
+                    child: CommonHeader(
+                      selectedLocation: _selectedLocation,
+                      onLocationTap: _handleLocationTap,
+                      onRightIconTap: _handleProfileTap,
+                    ),
+                  ),
 
                   // Search and Appointments
-                  _buildSearchSection(),
+                  Transform.translate(
+                    offset: const Offset(0, -10),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
+                      child: Row(
+                        children: [
+                          // Search Bar - White with shadow
+                          Flexible(
+                            flex: 2,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    spreadRadius: 1,
+                                    blurRadius: 5,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: TextField(
+                                controller: _searchController,
+                                decoration: const InputDecoration(
+                                  hintText: 'Search for a place or service',
+                                  hintStyle: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                  ),
+                                  prefixIcon: Icon(
+                                    Icons.search,
+                                    color: Colors.grey,
+                                  ),
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 12,
+                                  ),
+                                ),
+                                onSubmitted: (_) => _handleSearch(),
+                              ),
+                            ),
+                          ),
 
-                  // Promotional Banner
+                          const SizedBox(width: 8),
+
+                          // My Appointments Field
+                          GestureDetector(
+                            onTap: _handleAppointmentsTap,
+                            child: Container(
+                              width: 140,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    spreadRadius: 1,
+                                    blurRadius: 5,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    'My Appointments',
+                                    style: TextStyle(
+                                      color: Color(0xFF1A1A1A),
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  // Small tail image (doctors/patients icon)
+                                  Container(
+                                    width: 24,
+                                    height: 24,
+                                    decoration: BoxDecoration(
+                                      color: const Color(
+                                        0xFF9370DB,
+                                      ).withOpacity(0.1),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.people,
+                                      size: 14,
+                                      color: Color(0xFF9370DB),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 5),
+
+                  // Promotional Banner (Red Container)
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: _buildPromotionalBanner(),
+                    child: CommonPromotionalBanner(
+                      banner: _promotionalBanners.isNotEmpty
+                          ? _promotionalBanners[0]
+                          : null,
+                    ),
                   ),
 
                   const SizedBox(height: 20),
 
-                  // What Are You Looking For Section - inside same gradient
-                  _buildServiceCategories(),
-
-                  const SizedBox(height: 10), // Extra padding at bottom
+                  // What Are You Looking For Section - Title and First Two Containers Only
+                  Transform.translate(
+                    offset: const Offset(0, -10),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Transform.translate(
+                            offset: const Offset(0, 15),
+                            child: const Padding(
+                              padding: EdgeInsets.only(top: 0, bottom: 0),
+                              child: Text(
+                                'WHAT ARE YOU LOOKING FOR?',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ),
+                          ),
+                          // First row with only 2 containers - using GridView to maintain original size
+                          GridView.builder(
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 15,
+                                  mainAxisSpacing: 0,
+                                  childAspectRatio:
+                                      1.1, // Increased size - smaller ratio = larger containers
+                                ),
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: _serviceCategories.isNotEmpty
+                                ? (_serviceCategories.length >= 2 ? 2 : 1)
+                                : 2,
+                            itemBuilder: (context, index) {
+                              if (_serviceCategories.isNotEmpty) {
+                                return _buildCategoryCard(
+                                  _serviceCategories[index],
+                                );
+                              }
+                              // Placeholder while loading
+                              return _buildCategoryCardPlaceholder();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
+
+            // Remaining Service Categories (outside gradient)
+            if ((_serviceCategories.isNotEmpty &&
+                    _serviceCategories.length > 2) ||
+                (_serviceCategories.isEmpty))
+              Transform.translate(
+                offset: const Offset(0, -40),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Remaining containers in grid
+                      GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 15,
+                              mainAxisSpacing: 0,
+                              childAspectRatio: 1.1,
+                            ),
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: _serviceCategories.isNotEmpty
+                            ? (_serviceCategories.length > 2
+                                  ? _serviceCategories.length - 2
+                                  : 0)
+                            : 2, // Show 2 placeholders for remaining
+                        itemBuilder: (context, index) {
+                          if (_serviceCategories.isNotEmpty &&
+                              _serviceCategories.length > 2) {
+                            return _buildCategoryCard(
+                              _serviceCategories[index + 2],
+                            );
+                          }
+                          return _buildCategoryCardPlaceholder();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
 
             const SizedBox(height: 30),
 
@@ -132,333 +401,17 @@ class _HomeScreenState extends State<HomeScreen> {
             // Beauty Product Section
             _buildBeautyProducts(),
 
-            const SizedBox(height: 50), // Extra padding to prevent overflow
+            const SizedBox(height: 100), // Extra padding for bottom navigation
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
-    );
-  }
-
-  Widget _buildHeader() {
-    // Get status bar height
-    final statusBarHeight = MediaQuery.of(context).padding.top;
-
-    return Container(
-      color: Colors
-          .transparent, // Transparent since it's inside gradient container
-      padding: EdgeInsets.only(
-        top: statusBarHeight + 15, // Add status bar height + padding
-        bottom: 15,
-        left: 20,
-        right: 20,
-      ),
-      child: Row(
-        children: [
-          // Beubay Logo and Location Dropdown
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Beubay Title
-                ShaderMask(
-                  shaderCallback: (bounds) => const LinearGradient(
-                    colors: [
-                      Color(0xFF87CEEB), // Light blue
-                      Colors.white,
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ).createShader(bounds),
-                  child: const Text(
-                    'Beubay',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      letterSpacing: 1.5,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                // Location Dropdown
-                GestureDetector(
-                  onTap: () {
-                    // TODO: Show location picker
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.location_on,
-                        color: Colors.white,
-                        size: 18,
-                      ),
-                      const SizedBox(width: 4),
-                      Flexible(
-                        child: Text(
-                          _selectedLocation,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      const Icon(
-                        Icons.arrow_drop_down,
-                        color: Colors.white,
-                        size: 20,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Profile Icon
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.3),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(Icons.person, color: Colors.white),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSearchSection() {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Row(
-        children: [
-          // Search Bar - White with shadow
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 1,
-                    blurRadius: 5,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: const TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search for a place or service',
-                  hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
-                  prefixIcon: Icon(Icons.search, color: Colors.grey),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          const SizedBox(width: 12),
-
-          // My Appointments Button
-          Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: const Color(0xFF9370DB),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Icon(Icons.calendar_today, color: Colors.white),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPromotionalBanner() {
-    // Use first banner from API, or show placeholder if empty
-    final banner = _promotionalBanners.isNotEmpty
-        ? _promotionalBanners[0]
-        : null;
-
-    return Container(
-      height: 220,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        gradient: banner != null && banner['gradientColors'] != null
-            ? LinearGradient(
-                colors: (banner['gradientColors'] as List)
-                    .map((c) => Color(c))
-                    .toList(),
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              )
-            : const LinearGradient(
-                colors: [
-                  Color(0xFFDC143C), // Red background
-                  Color(0xFFC41E3A),
-                ],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              ),
-      ),
-      child: Stack(
-        children: [
-          // Left side - Text content from API
-          Positioned(
-            left: 20,
-            top: 0,
-            bottom: 0,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  banner?['title'] ?? '',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  banner?['subtitle'] ?? '',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 15),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: const Color(0xFFDC143C),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: Text(
-                    banner?['buttonText'] ?? 'Get a Free Consultation',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  banner?['footerText'] ?? '',
-                  style: const TextStyle(color: Colors.white70, fontSize: 10),
-                ),
-              ],
-            ),
-          ),
-
-          // Right side - Image from API
-          Positioned(
-            right: 0,
-            top: 0,
-            bottom: 0,
-            child: Container(
-              width: 120,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
-                ),
-              ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
-                ),
-                child: banner != null && banner['imageUrl'] != null
-                    ? Image.network(
-                        banner['imageUrl'],
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.white.withOpacity(0.2),
-                            child: const Icon(
-                              Icons.image_not_supported,
-                              size: 40,
-                              color: Colors.white70,
-                            ),
-                          );
-                        },
-                      )
-                    : Container(
-                        color: Colors.white.withOpacity(0.2),
-                        child: const Icon(
-                          Icons.face_retouching_natural,
-                          size: 80,
-                          color: Colors.white70,
-                        ),
-                      ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildServiceCategories() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text(
-            'WHAT ARE YOU LOOKING FOR?',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF1A1A1A),
-              letterSpacing: 0.5,
-            ),
-          ),
-          const SizedBox(height: 15),
-          GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 15,
-              mainAxisSpacing: 15,
-              childAspectRatio: 1.3, // Adjusted for image space
-            ),
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: _serviceCategories.isNotEmpty
-                ? _serviceCategories.length
-                : 4,
-            itemBuilder: (context, index) {
-              if (_serviceCategories.isNotEmpty) {
-                return _buildCategoryCard(_serviceCategories[index]);
-              }
-              // Placeholder while loading
-              return _buildCategoryCardPlaceholder();
-            },
-          ),
-        ],
+      bottomNavigationBar: CommonBottomNavBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
       ),
     );
   }
@@ -912,90 +865,6 @@ class _HomeScreenState extends State<HomeScreen> {
         border: Border.all(color: Colors.grey[200]!),
       ),
       child: const Center(child: CircularProgressIndicator()),
-    );
-  }
-
-  Widget _buildBottomNavigationBar() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white, // White background
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: Container(
-          height: 70,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(Icons.home, 'Home', 0),
-              _buildNavItem(Icons.content_cut, 'Salon', 1),
-              _buildNavItem(Icons.spa, 'Spa', 2),
-              _buildNavItem(Icons.medical_services, 'Clinic', 3),
-              _buildNavItem(Icons.shopping_bag, 'Cosmetic', 4),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavItem(IconData icon, String label, int index) {
-    final isSelected = _currentIndex == index;
-    Widget? targetScreen;
-    if (index == 1) {
-      targetScreen = const SalonScreen();
-    } else if (index == 2) {
-      targetScreen = const SpaScreen();
-    } else if (index == 3) {
-      targetScreen = const ClinicScreen();
-    } else if (index == 4) {
-      targetScreen = const CosmeticScreen();
-    }
-
-    return GestureDetector(
-      onTap: () {
-        if (targetScreen != null && index != _currentIndex) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => targetScreen!),
-          );
-        } else {
-          setState(() {
-            _currentIndex = index;
-          });
-        }
-      },
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: isSelected
-                ? const Color(0xFF9370DB) // Purple when selected
-                : Colors.grey[600], // Grey when not selected
-            size: 24,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              color: isSelected
-                  ? const Color(0xFF9370DB) // Purple when selected
-                  : Colors.grey[600], // Grey when not selected
-              fontSize: 12,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
