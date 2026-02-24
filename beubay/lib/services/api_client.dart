@@ -3,8 +3,9 @@ import 'package:http/http.dart' as http;
 
 class ApiClient {
   // Base URL - Update this with your actual API endpoint
-  static const String baseUrl = 'https://api.beubay.com'; // Replace with your API URL
-  
+  static const String baseUrl =
+      'https://api.beubay.com'; // Replace with your API URL
+
   // Get headers for API requests
   static Map<String, String> getHeaders() {
     return {
@@ -137,6 +138,69 @@ class ApiClient {
       return [];
     } catch (e) {
       print('Error fetching categories: $e');
+      return [];
+    }
+  }
+
+  // Get just arrivals products
+  static Future<List<Map<String, dynamic>>> getJustArrivals() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/products/just-arrivals'),
+        headers: getHeaders(),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          return List<Map<String, dynamic>>.from(data['data']);
+        }
+      }
+      return [];
+    } catch (e) {
+      print('Error fetching just arrivals: $e');
+      return [];
+    }
+  }
+
+  // Get most popular products
+  static Future<List<Map<String, dynamic>>> getMostPopular() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/products/most-popular'),
+        headers: getHeaders(),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          return List<Map<String, dynamic>>.from(data['data']);
+        }
+      }
+      return [];
+    } catch (e) {
+      print('Error fetching most popular: $e');
+      return [];
+    }
+  }
+
+  // Get cosmetic categories
+  static Future<List<Map<String, dynamic>>> getCosmeticCategories() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/cosmetic/categories'),
+        headers: getHeaders(),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          return List<Map<String, dynamic>>.from(data['data']);
+        }
+      }
+      return [];
+    } catch (e) {
+      print('Error fetching cosmetic categories: $e');
       return [];
     }
   }
