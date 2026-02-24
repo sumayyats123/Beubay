@@ -4,12 +4,14 @@ class CommonSearchSection extends StatelessWidget {
   final String? hintText;
   final Widget? rightButton;
   final VoidCallback? onRightButtonTap;
+  final bool showRightButton;
 
   const CommonSearchSection({
     super.key,
     this.hintText,
     this.rightButton,
     this.onRightButtonTap,
+    this.showRightButton = true,
   });
 
   @override
@@ -48,23 +50,24 @@ class CommonSearchSection extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(width: 12),
-
-          // Right Button (Appointments or Custom)
-          rightButton != null
-              ? GestureDetector(
-                  onTap: onRightButtonTap,
-                  child: rightButton!,
-                )
-              : Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF9370DB),
-                    borderRadius: BorderRadius.circular(12),
+          // Right Button (Appointments or Custom) - only show if showRightButton is true
+          if (showRightButton) ...[
+            const SizedBox(width: 12),
+            rightButton != null
+                ? GestureDetector(
+                    onTap: onRightButtonTap,
+                    child: rightButton!,
+                  )
+                : Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF9370DB),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: const Icon(Icons.calendar_today, color: Colors.white),
                   ),
-                  child: const Icon(Icons.calendar_today, color: Colors.white),
-                ),
+          ],
         ],
       ),
     );

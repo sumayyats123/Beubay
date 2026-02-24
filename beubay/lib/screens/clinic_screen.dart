@@ -6,6 +6,9 @@ import 'package:beubay/widgets/common_promotional_banner.dart';
 import 'package:beubay/widgets/common_bottom_nav_bar.dart';
 import 'package:beubay/widgets/common_gradient_container.dart';
 import 'package:beubay/widgets/common_sort_filter_menu.dart';
+import 'package:beubay/services/api_client.dart';
+import 'package:beubay/screens/location_picker_screen.dart';
+import 'package:beubay/screens/profile_screen.dart';
 
 class ClinicScreen extends StatefulWidget {
   const ClinicScreen({super.key});
@@ -25,22 +28,62 @@ class _ClinicScreenState extends State<ClinicScreen> {
   @override
   void initState() {
     super.initState();
-    // TODO: Load data from API
-    // _loadPromotionalBanners();
-    // _loadClinicServices();
-    
-    // Placeholder data for clinic screen
-    _promotionalBanners = [
-      {
-        'title': 'Expert Skin Care',
-        'subtitle': 'Professional Dermatology',
-        'buttonText': 'Get Consultation',
-        'footerText': 'Free consultation available',
-        'imageUrl': null,
-      },
-    ];
+    _loadDataFromApi();
   }
 
+  Future<void> _loadDataFromApi() async {
+    // Load promotional banners from API
+    final banners = await ApiClient.getPromotionalBanners();
+    if (banners.isNotEmpty) {
+      setState(() {
+        _promotionalBanners = banners;
+      });
+    } else {
+      // Fallback placeholder data
+      setState(() {
+        _promotionalBanners = [
+          {
+            'title': 'Expert Skin Care',
+            'subtitle': 'Professional Dermatology',
+            'buttonText': 'Get Consultation',
+            'footerText': 'Free consultation available',
+            'imageUrl': null,
+          },
+        ];
+      });
+    }
+
+    // TODO: Load clinic services from API
+    // _loadClinicServices();
+  }
+
+  Future<void> _handleLocationTap() async {
+    final selectedLocation = await Navigator.push<String>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LocationPickerScreen(
+          currentLocation: _selectedLocation,
+          onLocationSelected: (location) {
+            setState(() {
+              _selectedLocation = location;
+            });
+          },
+        ),
+      ),
+    );
+    if (selectedLocation != null) {
+      setState(() {
+        _selectedLocation = selectedLocation;
+      });
+    }
+  }
+
+  Future<void> _handleProfileTap() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ProfileScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,89 +119,114 @@ class _ClinicScreenState extends State<ClinicScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Top Header Section
-                  CommonHeader(
-                    selectedLocation: _selectedLocation,
-                    onLocationTap: () {
-                      // TODO: Show location picker
-                    },
-                    rightIcon: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            CommonSortFilterMenu.show(context);
-                          },
-                          child: Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.3),
-                              shape: BoxShape.circle,
+                  Transform.translate(
+                    offset: const Offset(0, -10),
+                    child: CommonHeader(
+                      selectedLocation: _selectedLocation,
+                      onLocationTap: _handleLocationTap,
+                      rightIcon: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              CommonSortFilterMenu.show(context);
+                            },
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.3),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.filter_list,
+                                color: Colors.white,
+                              ),
                             ),
-                            child: const Icon(Icons.filter_list, color: Colors.white),
                           ),
-                        ),
-                        const SizedBox(width: 10),
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.3),
-                            shape: BoxShape.circle,
+                          const SizedBox(width: 10),
+                          GestureDetector(
+                            onTap: _handleProfileTap,
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.3),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.person,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
-                          child: const Icon(Icons.person, color: Colors.white),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
 
                   // Promotional Banner (Horizontally Scrollable)
-                  SizedBox(
-                    height: 220,
-                    child: _promotionalBanners.isNotEmpty
-                        ? ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                            itemCount: _promotionalBanners.length,
-                            itemBuilder: (context, index) {
-                              return CommonPromotionalBanner(
-                                banner: _promotionalBanners[index],
-                                width: MediaQuery.of(context).size.width - 40,
-                              );
-                            },
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                            child: CommonPromotionalBanner(banner: null),
-                          ),
+                  Transform.translate(
+                    offset: const Offset(0, -10),
+                    child: SizedBox(
+                      height: 220,
+                      child: _promotionalBanners.isNotEmpty
+                          ? ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 10,
+                              ),
+                              itemCount: _promotionalBanners.length,
+                              itemBuilder: (context, index) {
+                                return CommonPromotionalBanner(
+                                  banner: _promotionalBanners[index],
+                                  width: MediaQuery.of(context).size.width - 40,
+                                );
+                              },
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 10,
+                              ),
+                              child: CommonPromotionalBanner(banner: null),
+                            ),
+                    ),
                   ),
 
                   // Search Section
-                  const CommonSearchSection(),
+                  Transform.translate(
+                    offset: const Offset(0, -25),
+                    child: const CommonSearchSection(showRightButton: false),
+                  ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 0),
 
                   // Clinics Section Title and First Container
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(bottom: 15),
-                          child: Text(
-                            'CLINICS',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF1A1A1A),
-                              letterSpacing: 0.5,
+                  Transform.translate(
+                    offset: const Offset(0, -15),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(bottom: 8),
+                            child: Text(
+                              'CLINICS',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                letterSpacing: 0.5,
+                              ),
                             ),
                           ),
-                        ),
-                        _buildFirstServiceItem(),
-                        const SizedBox(height: 20),
-                      ],
+                          const SizedBox(height: 15),
+                          _buildFirstServiceItem(),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -183,7 +251,6 @@ class _ClinicScreenState extends State<ClinicScreen> {
     );
   }
 
-
   Widget _buildFirstServiceItem() {
     // Show only first container inside gradient
     if (_clinicServices.isNotEmpty) {
@@ -200,14 +267,11 @@ class _ClinicScreenState extends State<ClinicScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(
-            2,
-            (index) => _buildServiceCardPlaceholder(),
-          ),
+          children: List.generate(2, (index) => _buildServiceCardPlaceholder()),
         ),
       );
     }
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -225,7 +289,6 @@ class _ClinicScreenState extends State<ClinicScreen> {
       ),
     );
   }
-
 
   Widget _buildServiceCard(Map<String, dynamic> service) {
     return Container(
@@ -279,14 +342,21 @@ class _ClinicScreenState extends State<ClinicScreen> {
                         ),
                       )
                     : const Center(
-                        child: Icon(Icons.medical_services, color: Colors.grey, size: 40),
+                        child: Icon(
+                          Icons.medical_services,
+                          color: Colors.grey,
+                          size: 40,
+                        ),
                       ),
               ),
               Positioned(
                 top: 10,
                 right: 10,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFF9370DB),
                     borderRadius: BorderRadius.circular(20),
@@ -394,5 +464,4 @@ class _ClinicScreenState extends State<ClinicScreen> {
       child: const Center(child: CircularProgressIndicator()),
     );
   }
-
 }
