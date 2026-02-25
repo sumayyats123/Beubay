@@ -228,4 +228,77 @@ class ApiClient {
       return null;
     }
   }
+
+  // Get products by category
+  static Future<List<Map<String, dynamic>>> getProductsByCategory(
+    String categoryName,
+  ) async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            '$baseUrl/api/products/category/${Uri.encodeComponent(categoryName)}'),
+        headers: getHeaders(),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          return List<Map<String, dynamic>>.from(data['data']);
+        }
+      }
+      return [];
+    } catch (e) {
+      print('Error fetching products by category: $e');
+      return [];
+    }
+  }
+
+  // Get products by category with sort parameter
+  static Future<List<Map<String, dynamic>>> getProductsByCategoryWithSort(
+    String categoryName,
+    String sortBy,
+  ) async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            '$baseUrl/api/products/category/${Uri.encodeComponent(categoryName)}?sort=$sortBy'),
+        headers: getHeaders(),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          return List<Map<String, dynamic>>.from(data['data']);
+        }
+      }
+      return [];
+    } catch (e) {
+      print('Error fetching sorted products by category: $e');
+      return [];
+    }
+  }
+
+  // Get subcategories for a category
+  static Future<List<Map<String, dynamic>>> getCategorySubcategories(
+    String categoryName,
+  ) async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+            '$baseUrl/api/cosmetic/category/${Uri.encodeComponent(categoryName)}/subcategories'),
+        headers: getHeaders(),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          return List<Map<String, dynamic>>.from(data['data']);
+        }
+      }
+      return [];
+    } catch (e) {
+      print('Error fetching category subcategories: $e');
+      return [];
+    }
+  }
 }

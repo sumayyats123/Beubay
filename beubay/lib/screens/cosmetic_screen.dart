@@ -8,6 +8,7 @@ import 'package:beubay/screens/location_picker_screen.dart';
 import 'package:beubay/screens/profile_screen.dart';
 import 'package:beubay/screens/search_results_screen.dart';
 import 'package:beubay/screens/cart_screen.dart';
+import 'package:beubay/screens/category_subcategories_screen.dart';
 
 class CosmeticScreen extends StatefulWidget {
   const CosmeticScreen({super.key});
@@ -475,7 +476,22 @@ class _CosmeticScreenState extends State<CosmeticScreen> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: _categories.length,
             itemBuilder: (context, index) {
-              return _buildCategoryCard(_categories[index]);
+              return GestureDetector(
+                onTap: () {
+                  final categoryName = _categories[index]['name'] ?? '';
+                  if (categoryName.isNotEmpty) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CategorySubcategoriesScreen(
+                          categoryName: categoryName,
+                        ),
+                      ),
+                    );
+                  }
+                },
+                child: _buildCategoryCard(_categories[index]),
+              );
             },
           ),
         ],
