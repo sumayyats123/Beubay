@@ -253,6 +253,27 @@ class ApiClient {
     }
   }
 
+  // Get product detail by ID
+  static Future<Map<String, dynamic>?> getProductDetail(String productId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/products/$productId'),
+        headers: getHeaders(),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['success'] == true && data['data'] != null) {
+          return Map<String, dynamic>.from(data['data']);
+        }
+      }
+      return null;
+    } catch (e) {
+      print('Error fetching product detail: $e');
+      return null;
+    }
+  }
+
   // Get products by category with sort parameter
   static Future<List<Map<String, dynamic>>> getProductsByCategoryWithSort(
     String categoryName,

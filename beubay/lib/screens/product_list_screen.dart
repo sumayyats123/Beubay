@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:beubay/widgets/common_bottom_nav_bar.dart';
 import 'package:beubay/screens/cart_screen.dart';
 import 'package:beubay/screens/profile_screen.dart';
+import 'package:beubay/screens/product_detail_screen.dart';
 
 class ProductListScreen extends StatefulWidget {
   final String categoryName;
@@ -57,8 +58,14 @@ class _ProductListScreenState extends State<ProductListScreen> {
       if (!mounted) return;
       
       _safeSetState(() {
-        _products = products;
-        _allProducts = List.from(products); // Store all products
+        // If products are empty, add placeholder products for testing
+        if (products.isEmpty) {
+          _products = _getPlaceholderProducts();
+          _allProducts = List.from(_products);
+        } else {
+          _products = products;
+          _allProducts = List.from(products);
+        }
         _isLoading = false;
       });
     } catch (e) {
@@ -68,15 +75,81 @@ class _ProductListScreenState extends State<ProductListScreen> {
       _safeSetState(() {
         _isLoading = false;
         // Add placeholder data for testing
-        _products = List.generate(6, (index) => {
-          'name': 'Glow Serum',
-          'brand': 'The Ordinary',
-          'price': '1299',
-          'imageUrl': null,
-          'description': 'Product description here',
-        });
+        _products = _getPlaceholderProducts();
+        _allProducts = List.from(_products);
       });
     }
+  }
+
+  List<Map<String, dynamic>> _getPlaceholderProducts() {
+    return [
+      {
+        'id': '1',
+        'name': 'Salicylic Acid + LHA 2% Cleanser',
+        'brand': 'The Ordinary',
+        'price': '1299',
+        'original_price': '1800',
+        'imageUrl': null,
+        'description': 'A gentle exfoliating cleanser with salicylic acid',
+        'images': [],
+        'size': '100 ml',
+      },
+      {
+        'id': '2',
+        'name': 'Glow Serum',
+        'brand': 'The Ordinary',
+        'price': '1299',
+        'original_price': '1500',
+        'imageUrl': null,
+        'description': 'Brightening serum for radiant skin',
+        'images': [],
+        'size': '50 ml',
+      },
+      {
+        'id': '3',
+        'name': 'Hydrating Face Wash',
+        'brand': 'CeraVe',
+        'price': '899',
+        'original_price': '1200',
+        'imageUrl': null,
+        'description': 'Moisturizing cleanser for dry skin',
+        'images': [],
+        'size': '236 ml',
+      },
+      {
+        'id': '4',
+        'name': 'Vitamin C Brightening Scrub',
+        'brand': 'Neutrogena',
+        'price': '1499',
+        'original_price': '2000',
+        'imageUrl': null,
+        'description': 'Exfoliating scrub with vitamin C',
+        'images': [],
+        'size': '100 ml',
+      },
+      {
+        'id': '5',
+        'name': 'Gentle Exfoliating Cleanser',
+        'brand': 'Cetaphil',
+        'price': '799',
+        'original_price': '1100',
+        'imageUrl': null,
+        'description': 'Daily exfoliating face wash',
+        'images': [],
+        'size': '150 ml',
+      },
+      {
+        'id': '6',
+        'name': 'Charcoal Detox Scrub',
+        'brand': 'Garnier',
+        'price': '599',
+        'original_price': '800',
+        'imageUrl': null,
+        'description': 'Deep cleansing charcoal scrub',
+        'images': [],
+        'size': '100 ml',
+      },
+    ];
   }
 
   String _formatPrice(dynamic price) {
@@ -935,12 +1008,21 @@ class _ProductListScreenState extends State<ProductListScreen> {
           '',
     );
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductDetailScreen(product: product),
+          ),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Product Image
@@ -1037,6 +1119,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
             ),
           ),
         ],
+      ),
       ),
     );
   }
