@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:beubay/screens/service_selection_screen.dart';
 
 class ServiceDetailScreen extends StatefulWidget {
   final Map<String, dynamic> service;
@@ -759,10 +760,10 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
           height: 50,
           child: ElevatedButton(
             onPressed: () {
-              // TODO: Navigate to booking screen
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Booking functionality coming soon'),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ServiceSelectionScreen(),
                 ),
               );
             },

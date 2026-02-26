@@ -5,7 +5,7 @@ import 'package:beubay/widgets/common_bottom_nav_bar.dart';
 import 'package:beubay/widgets/common_gradient_container.dart';
 import 'package:beubay/services/api_client.dart';
 import 'package:beubay/screens/location_picker_screen.dart';
-import 'package:beubay/screens/profile_screen.dart';
+import 'package:beubay/screens/settings_screen.dart';
 import 'package:beubay/screens/search_results_screen.dart';
 import 'package:beubay/screens/cart_screen.dart';
 import 'package:beubay/screens/category_subcategories_screen.dart';
@@ -128,7 +128,7 @@ class _CosmeticScreenState extends State<CosmeticScreen> {
   Future<void> _handleProfileTap() async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const ProfileScreen()),
+      MaterialPageRoute(builder: (context) => const SettingsScreen()),
     );
   }
 
