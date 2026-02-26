@@ -1,6 +1,6 @@
-
 import 'package:beubay/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 
 
@@ -34,32 +34,27 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-
+          children: [
             Icon(
               Icons.spa,
-              size: 90,
+              size: ResponsiveHelper.isMobile(context) ? 90.0 : ResponsiveHelper.isTablet(context) ? 110.0 : 130.0,
               color: Colors.white,
             ),
-
-            SizedBox(height: 20),
-
+            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 20)),
             Text(
               "BEUBAY",
               style: TextStyle(
-                fontSize: 36,
+                fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 36),
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
                 letterSpacing: 2,
               ),
             ),
-
-            SizedBox(height: 10),
-
+            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 10)),
             Text(
               "Beauty at Your Doorstep",
               style: TextStyle(
-                fontSize: 16,
+                fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                 color: Colors.white70,
               ),
             ),

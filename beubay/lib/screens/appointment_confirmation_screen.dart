@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:beubay/models/booking_models.dart';
 import 'package:beubay/screens/waiting_room_screen.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 class AppointmentConfirmationScreen extends StatefulWidget {
   final List<String> selectedServices;
@@ -37,11 +38,11 @@ class _AppointmentConfirmationScreenState
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Confirmation',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 20),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -50,49 +51,58 @@ class _AppointmentConfirmationScreenState
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 40),
+            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 40)),
             // Confirmation Icon
-            Container(
-              width: 120,
-              height: 120,
-              decoration: const BoxDecoration(
-                color: Color(0xFF9370DB),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.check,
-                color: Colors.white,
-                size: 60,
-              ),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final iconSize = ResponsiveHelper.isMobile(context) ? 120.0 : ResponsiveHelper.isTablet(context) ? 140.0 : 160.0;
+                return Container(
+                  width: iconSize,
+                  height: iconSize,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF9370DB),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.check,
+                    color: Colors.white,
+                    size: iconSize * 0.5,
+                  ),
+                );
+              },
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 24)),
             // Confirmation Message
-            const Text(
+            Text(
               'Appointment Confirmed!',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 24),
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 16)),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.responsiveSpacing(context, 32),
+              ),
               child: Text(
                 'Your appointment has been successfully booked. We look forward to serving you at our salon.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                   color: Colors.grey[700],
                   height: 1.5,
                 ),
               ),
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 32)),
             // Appointment Details Card
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
-              padding: const EdgeInsets.all(20),
+              margin: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.responsiveSpacing(context, 16),
+              ),
+              padding: ResponsiveHelper.responsivePadding(context),
               decoration: BoxDecoration(
                 color: const Color(0xFF9370DB),
                 borderRadius: BorderRadius.circular(16),
@@ -103,28 +113,33 @@ class _AppointmentConfirmationScreenState
                   Row(
                     children: [
                       // Doctor Image
-                      Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.person,
-                          color: Colors.white,
-                          size: 30,
-                        ),
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final avatarSize = ResponsiveHelper.isMobile(context) ? 60.0 : ResponsiveHelper.isTablet(context) ? 70.0 : 80.0;
+                          return Container(
+                            width: avatarSize,
+                            height: avatarSize,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.person,
+                              color: Colors.white,
+                              size: avatarSize * 0.5,
+                            ),
+                          );
+                        },
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 12)),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               widget.selectedStylist.name,
-                              style: const TextStyle(
-                                fontSize: 18,
+                              style: TextStyle(
+                                fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 18),
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                               ),
@@ -132,7 +147,7 @@ class _AppointmentConfirmationScreenState
                             Text(
                               widget.selectedStylist.title ?? 'Service Provider',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                                 color: Colors.white.withOpacity(0.9),
                               ),
                             ),
@@ -140,18 +155,18 @@ class _AppointmentConfirmationScreenState
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: ResponsiveHelper.responsiveSpacing(context, 12),
+                          vertical: ResponsiveHelper.responsiveSpacing(context, 6),
                         ),
                         decoration: BoxDecoration(
                           color: Colors.green,
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Text(
+                        child: Text(
                           'CONFIRMED',
                           style: TextStyle(
-                            fontSize: 10,
+                            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 10),
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -159,66 +174,66 @@ class _AppointmentConfirmationScreenState
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 20)),
                   // Date
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.calendar_today,
                         color: Colors.white,
-                        size: 18,
+                        size: ResponsiveHelper.responsiveFontSize(context, mobile: 18),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 8)),
                       Text(
                         DateFormat('EEE, MMM dd, yyyy').format(widget.selectedDate),
-                        style: const TextStyle(
-                          fontSize: 14,
+                        style: TextStyle(
+                          fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                           color: Colors.white,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 12)),
                   // Time
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.access_time,
                         color: Colors.white,
-                        size: 18,
+                        size: ResponsiveHelper.responsiveFontSize(context, mobile: 18),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 8)),
                       Text(
                         widget.selectedTimes.isNotEmpty
                             ? '${widget.selectedTimes.first} AM - ${widget.selectedTimes.first.split(':')[0]}:${int.parse(widget.selectedTimes.first.split(':')[1]) + 30} AM'
                             : 'N/A',
-                        style: const TextStyle(
-                          fontSize: 14,
+                        style: TextStyle(
+                          fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                           color: Colors.white,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 12)),
                   // Type
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.videocam,
                         color: Colors.white,
-                        size: 18,
+                        size: ResponsiveHelper.responsiveFontSize(context, mobile: 18),
                       ),
-                      const SizedBox(width: 8),
-                      const Text(
+                      SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 8)),
+                      Text(
                         'Online Video Call',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                           color: Colors.white,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 20)),
                   // Action Buttons
                   Row(
                     children: [
@@ -232,12 +247,14 @@ class _AppointmentConfirmationScreenState
                               ),
                             );
                           },
-                          icon: const Icon(Icons.schedule, size: 18),
-                          label: const Text('Reschedule'),
+                          icon: Icon(Icons.schedule, size: ResponsiveHelper.responsiveFontSize(context, mobile: 18)),
+                          label: Text('Reschedule'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             foregroundColor: const Color(0xFF9370DB),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            padding: EdgeInsets.symmetric(
+                              vertical: ResponsiveHelper.responsiveSpacing(context, 12),
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -245,18 +262,21 @@ class _AppointmentConfirmationScreenState
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 12)),
                       IconButton(
                         onPressed: () {
                           _showCancelDialog();
                         },
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.close,
                           color: Colors.white,
+                          size: ResponsiveHelper.responsiveFontSize(context, mobile: 24),
                         ),
                         style: IconButton.styleFrom(
                           backgroundColor: Colors.white.withOpacity(0.2),
-                          padding: const EdgeInsets.all(12),
+                          padding: EdgeInsets.all(
+                            ResponsiveHelper.responsiveSpacing(context, 12),
+                          ),
                         ),
                       ),
                     ],
@@ -264,12 +284,12 @@ class _AppointmentConfirmationScreenState
                 ],
               ),
             ),
-            const SizedBox(height: 40),
+            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 40)),
           ],
         ),
       ),
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16),
+        padding: ResponsiveHelper.responsivePadding(context),
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -295,22 +315,24 @@ class _AppointmentConfirmationScreenState
                 },
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Colors.green,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  padding: EdgeInsets.symmetric(
+                    vertical: ResponsiveHelper.responsiveSpacing(context, 14),
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                   side: const BorderSide(color: Colors.green),
                 ),
-                child: const Text(
+                child: Text(
                   'Make Payment',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 12)),
             Expanded(
               child: ElevatedButton(
                 onPressed: () {
@@ -330,16 +352,18 @@ class _AppointmentConfirmationScreenState
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF9370DB),
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  padding: EdgeInsets.symmetric(
+                    vertical: ResponsiveHelper.responsiveSpacing(context, 14),
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                   elevation: 0,
                 ),
-                child: const Text(
+                child: Text(
                   'Go to Dashboard',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                     fontWeight: FontWeight.w600,
                   ),
                 ),

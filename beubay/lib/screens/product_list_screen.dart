@@ -6,6 +6,7 @@ import 'package:beubay/widgets/common_bottom_nav_bar.dart';
 import 'package:beubay/screens/cart_screen.dart';
 import 'package:beubay/screens/settings_screen.dart';
 import 'package:beubay/screens/product_detail_screen.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 class ProductListScreen extends StatefulWidget {
   final String categoryName;
@@ -206,31 +207,49 @@ class _ProductListScreenState extends State<ProductListScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              margin: const EdgeInsets.only(top: 10),
-              width: 40,
-              height: 4,
+              margin: EdgeInsets.only(top: ResponsiveHelper.responsiveSpacing(context, 10)),
+              width: ResponsiveHelper.isMobile(context) ? 40.0 : 50.0,
+              height: ResponsiveHelper.isMobile(context) ? 4.0 : 5.0,
               decoration: BoxDecoration(
                 color: Colors.grey[300],
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.sort, color: Color(0xFF9370DB)),
-              title: const Text('Sort'),
+              leading: Icon(
+                Icons.sort,
+                color: const Color(0xFF9370DB),
+                size: ResponsiveHelper.responsiveFontSize(context, mobile: 24),
+              ),
+              title: Text(
+                'Sort',
+                style: TextStyle(
+                  fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
+                ),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 _showSortModal();
               },
             ),
             ListTile(
-              leading: const Icon(Icons.filter_list, color: Color(0xFF9370DB)),
-              title: const Text('Filter'),
+              leading: Icon(
+                Icons.filter_list,
+                color: const Color(0xFF9370DB),
+                size: ResponsiveHelper.responsiveFontSize(context, mobile: 24),
+              ),
+              title: Text(
+                'Filter',
+                style: TextStyle(
+                  fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
+                ),
+              ),
               onTap: () {
                 Navigator.pop(context);
                 _showFilterModal();
               },
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 10)),
           ],
         ),
       ),
@@ -259,23 +278,27 @@ class _ProductListScreenState extends State<ProductListScreen> {
               children: [
                 // Header with title and close button
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 16,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: ResponsiveHelper.responsiveSpacing(context, 20),
+                    vertical: ResponsiveHelper.responsiveSpacing(context, 16),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      Text(
                         'Sort by',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 20),
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.close, color: Colors.black),
+                        icon: Icon(
+                          Icons.close,
+                          color: Colors.black,
+                          size: ResponsiveHelper.responsiveFontSize(context, mobile: 24),
+                        ),
                         onPressed: () => Navigator.pop(context),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
@@ -283,7 +306,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     ],
                   ),
                 ),
-                const Divider(height: 1),
+                Divider(height: ResponsiveHelper.responsiveSpacing(context, 1)),
                 // Sort Options
                 Expanded(
                   child: ListView(
@@ -382,32 +405,52 @@ class _ProductListScreenState extends State<ProductListScreen> {
       },
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        padding: EdgeInsets.symmetric(
+          horizontal: ResponsiveHelper.responsiveSpacing(context, 20),
+          vertical: ResponsiveHelper.responsiveSpacing(context, 16),
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               option,
-              style: const TextStyle(fontSize: 16, color: Colors.black),
+              style: TextStyle(
+                fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
+                color: Colors.black,
+              ),
             ),
             if (isSelected)
-              Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF9370DB),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: const Icon(Icons.check, color: Colors.white, size: 16),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final checkSize = ResponsiveHelper.isMobile(context) ? 24.0 : 28.0;
+                  return Container(
+                    width: checkSize,
+                    height: checkSize,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF9370DB),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Icon(
+                      Icons.check,
+                      color: Colors.white,
+                      size: checkSize * 0.67,
+                    ),
+                  );
+                },
               )
             else
-              Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey[300]!),
-                  borderRadius: BorderRadius.circular(4),
-                ),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final boxSize = ResponsiveHelper.isMobile(context) ? 24.0 : 28.0;
+                  return Container(
+                    width: boxSize,
+                    height: boxSize,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey[300]!),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  );
+                },
               ),
           ],
         ),
@@ -452,23 +495,27 @@ class _ProductListScreenState extends State<ProductListScreen> {
               children: [
                 // Header with title and close button
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 16,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: ResponsiveHelper.responsiveSpacing(context, 20),
+                    vertical: ResponsiveHelper.responsiveSpacing(context, 16),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                      Text(
                         'Filter',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 20),
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.close, color: Colors.black),
+                        icon: Icon(
+                          Icons.close,
+                          color: Colors.black,
+                          size: ResponsiveHelper.responsiveFontSize(context, mobile: 24),
+                        ),
                         onPressed: () => Navigator.pop(context),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
@@ -476,7 +523,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     ],
                   ),
                 ),
-                const Divider(height: 1),
+                Divider(height: ResponsiveHelper.responsiveSpacing(context, 1)),
                 // Filter Content
                 Expanded(
                   child: SingleChildScrollView(
@@ -873,19 +920,20 @@ class _ProductListScreenState extends State<ProductListScreen> {
               SafeArea(
                 bottom: false,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 8,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: ResponsiveHelper.responsiveSpacing(context, 20),
+                    vertical: ResponsiveHelper.responsiveSpacing(context, 8),
                   ),
                   child: Row(
                     children: [
                       // Back Arrow (top left, moved more to left)
                       Transform.translate(
-                        offset: const Offset(-16, 0),
+                        offset: Offset(-ResponsiveHelper.responsiveSpacing(context, 16), 0),
                         child: IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.arrow_back,
                             color: Colors.black,
+                            size: ResponsiveHelper.responsiveFontSize(context, mobile: 24),
                           ),
                           onPressed: () => Navigator.pop(context),
                           padding: EdgeInsets.zero,
@@ -894,24 +942,33 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       const Spacer(),
                       // Sort/Filter Icon (combined)
                       IconButton(
-                        icon: const Icon(Icons.tune, color: Colors.black),
+                        icon: Icon(
+                          Icons.tune,
+                          color: Colors.black,
+                          size: ResponsiveHelper.responsiveFontSize(context, mobile: 24),
+                        ),
                         onPressed: _showSortFilterMenu,
                         padding: EdgeInsets.zero,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 8)),
                       // Cart Icon
                       IconButton(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.shopping_cart_outlined,
                           color: Colors.black,
+                          size: ResponsiveHelper.responsiveFontSize(context, mobile: 24),
                         ),
                         onPressed: _handleCartTap,
                         padding: EdgeInsets.zero,
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 8)),
                       // Profile Icon
                       IconButton(
-                        icon: const Icon(Icons.person, color: Colors.black),
+                        icon: Icon(
+                          Icons.person,
+                          color: Colors.black,
+                          size: ResponsiveHelper.responsiveFontSize(context, mobile: 24),
+                        ),
                         onPressed: _handleProfileTap,
                         padding: EdgeInsets.zero,
                       ),
@@ -921,9 +978,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
               ),
               // Second Row: Title and Product Count (same row)
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 8,
+                padding: EdgeInsets.symmetric(
+                  horizontal: ResponsiveHelper.responsiveSpacing(context, 20),
+                  vertical: ResponsiveHelper.responsiveSpacing(context, 8),
                 ),
                 child: Row(
                   children: [
@@ -931,9 +988,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     Expanded(
                       child: Text(
                         widget.categoryName,
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.black,
-                          fontSize: 20,
+                          fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 20),
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -943,7 +1000,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       _isLoading
                           ? 'Loading...'
                           : '${_products.length} products',
-                      style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
+                      ),
                     ),
                   ],
                 ),
@@ -967,25 +1027,26 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       children: [
                         Icon(
                           Icons.inventory_2_outlined,
-                          size: 64,
+                          size: ResponsiveHelper.isMobile(context) ? 64.0 : ResponsiveHelper.isTablet(context) ? 80.0 : 96.0,
                           color: Colors.grey[400],
                         ),
-                        const SizedBox(height: 16),
+                        SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 16)),
                         Text(
                           'No products available',
                           style: TextStyle(
                             color: Colors.grey[600],
-                            fontSize: 16,
+                            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                           ),
                         ),
                       ],
                     ),
                   )
                 : GridView.builder(
-                    padding: const EdgeInsets.all(15),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
+                    padding: EdgeInsets.all(
+                      ResponsiveHelper.responsiveSpacing(context, 15),
+                    ),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: ResponsiveHelper.isMobile(context) ? 2 : ResponsiveHelper.isTablet(context) ? 3 : 4,
                           crossAxisSpacing: 15,
                           mainAxisSpacing: 15,
                           childAspectRatio: 0.75,

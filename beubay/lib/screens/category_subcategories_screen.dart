@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:beubay/services/api_client.dart';
 import 'package:beubay/screens/product_list_screen.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 class CategorySubcategoriesScreen extends StatefulWidget {
   final String categoryName;
@@ -162,9 +163,9 @@ class _CategorySubcategoriesScreenState
         ),
         title: Text(
           widget.categoryName,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.black,
-            fontSize: 24,
+            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 24),
             fontWeight: FontWeight.w300,
             fontFamily: 'serif',
           ),
@@ -184,13 +185,16 @@ class _CategorySubcategoriesScreenState
                 children: [
                   Icon(
                     Icons.category_outlined,
-                    size: 64,
+                    size: ResponsiveHelper.isMobile(context) ? 64.0 : ResponsiveHelper.isTablet(context) ? 80.0 : 96.0,
                     color: Colors.grey[400],
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 16)),
                   Text(
                     'No subcategories available',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
+                    ),
                   ),
                 ],
               ),
@@ -215,19 +219,23 @@ class _CategorySubcategoriesScreenState
         ),
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(
-          vertical: 16,
-          horizontal: 20,
+        contentPadding: EdgeInsets.symmetric(
+          vertical: ResponsiveHelper.responsiveSpacing(context, 16),
+          horizontal: ResponsiveHelper.responsiveSpacing(context, 20),
         ),
         title: Text(
           name,
-          style: const TextStyle(
-            fontSize: 16,
+          style: TextStyle(
+            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
             fontWeight: FontWeight.w400,
-            color: Color(0xFF424242),
+            color: const Color(0xFF424242),
           ),
         ),
-        trailing: Icon(Icons.chevron_right, color: Colors.grey[400], size: 20),
+        trailing: Icon(
+          Icons.chevron_right,
+          color: Colors.grey[400],
+          size: ResponsiveHelper.responsiveFontSize(context, mobile: 20),
+        ),
         onTap: () {
           // Navigate to product list screen with subcategory name
           // If "View All" is selected, use the main category name

@@ -9,6 +9,7 @@ import 'package:beubay/screens/location_picker_screen.dart';
 import 'package:beubay/screens/settings_screen.dart';
 import 'package:beubay/screens/search_results_screen.dart';
 import 'package:beubay/screens/appointments_screen.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -174,106 +175,186 @@ class _HomeScreenState extends State<HomeScreen> {
                   // Search and Appointments
                   Transform.translate(
                     offset: const Offset(0, -10),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
-                      ),
-                      child: Row(
-                        children: [
-                          // Search Bar - White with shadow
-                          Flexible(
-                            flex: 2,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.1),
-                                    spreadRadius: 1,
-                                    blurRadius: 5,
-                                    offset: const Offset(0, 2),
+                    child: Builder(
+                      builder: (builderContext) {
+                        // Get screen width outside LayoutBuilder to avoid layout conflicts
+                        final screenWidth = MediaQuery.of(
+                          builderContext,
+                        ).size.width;
+                        final isMobile = screenWidth < 600;
+                        final isTablet =
+                            screenWidth >= 600 && screenWidth < 1024;
+                        final searchHeight = isMobile
+                            ? 50.0
+                            : isTablet
+                            ? 56.0
+                            : 60.0;
+                        final fontSize = isMobile
+                            ? 14.0
+                            : isTablet
+                            ? 16.0
+                            : 18.0;
+                        final iconSize = isMobile
+                            ? 24.0
+                            : isTablet
+                            ? 26.0
+                            : 28.0;
+                        final horizontalPadding = isMobile
+                            ? 16.0
+                            : isTablet
+                            ? 20.0
+                            : 24.0;
+                        final verticalPadding = isMobile
+                            ? 12.0
+                            : isTablet
+                            ? 14.0
+                            : 16.0;
+                        final spacing = isMobile
+                            ? 8.0
+                            : isTablet
+                            ? 10.0
+                            : 12.0;
+
+                        return Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: ResponsiveHelper.responsiveSpacing(
+                              builderContext,
+                              20,
+                            ),
+                            vertical: ResponsiveHelper.responsiveSpacing(
+                              builderContext,
+                              10,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              // Search Bar - White with shadow
+                              Flexible(
+                                flex: 2,
+                                child: Container(
+                                  constraints: BoxConstraints(
+                                    minHeight: searchHeight,
                                   ),
-                                ],
-                              ),
-                              child: TextField(
-                                controller: _searchController,
-                                decoration: const InputDecoration(
-                                  hintText: 'Search for a place or service',
-                                  hintStyle: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.1),
+                                        spreadRadius: 1,
+                                        blurRadius: 5,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
                                   ),
-                                  prefixIcon: Icon(
-                                    Icons.search,
-                                    color: Colors.grey,
-                                  ),
-                                  border: InputBorder.none,
-                                  contentPadding: EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 12,
+                                  child: TextField(
+                                    controller: _searchController,
+                                    decoration: InputDecoration(
+                                      hintText: 'Search for a place or service',
+                                      hintStyle: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: fontSize,
+                                      ),
+                                      prefixIcon: Icon(
+                                        Icons.search,
+                                        color: Colors.grey,
+                                        size: iconSize,
+                                      ),
+                                      border: InputBorder.none,
+                                      contentPadding: EdgeInsets.symmetric(
+                                        horizontal: horizontalPadding,
+                                        vertical: verticalPadding,
+                                      ),
+                                    ),
+                                    onSubmitted: (_) => _handleSearch(),
                                   ),
                                 ),
-                                onSubmitted: (_) => _handleSearch(),
                               ),
-                            ),
-                          ),
 
-                          const SizedBox(width: 8),
+                              SizedBox(width: spacing),
 
-                          // My Appointments Field
-                          GestureDetector(
-                            onTap: _handleAppointmentsTap,
-                            child: Container(
-                              width: 140,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.1),
-                                    spreadRadius: 1,
-                                    blurRadius: 5,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
+                              // My Appointments Field
+                              Flexible(
+                                flex: 1,
+                                child: LayoutBuilder(
+                                  builder: (layoutContext, constraints) {
+                                    // Get available width and ensure constraints are valid
+                                    final availableWidth = constraints.maxWidth;
+
+                                    final desiredMinWidth = isMobile
+                                        ? 100.0
+                                        : 120.0;
+                                    final desiredMaxWidth = isMobile
+                                        ? 150.0
+                                        : 170.0;
+
+                                    // Ensure minWidth doesn't exceed available width
+                                    final effectiveMinWidth =
+                                        availableWidth < desiredMinWidth
+                                        ? 0.0
+                                        : desiredMinWidth;
+                                    final effectiveMaxWidth =
+                                        availableWidth < desiredMaxWidth
+                                        ? availableWidth
+                                        : desiredMaxWidth;
+
+                                    final buttonHeight = isMobile
+                                        ? 50.0
+                                        : isTablet
+                                        ? 56.0
+                                        : 60.0;
+                                    final buttonFontSize = isMobile
+                                        ? 12.0
+                                        : isTablet
+                                        ? 14.0
+                                        : 16.0;
+
+                                    return GestureDetector(
+                                      onTap: _handleAppointmentsTap,
+                                      child: Container(
+                                        constraints: BoxConstraints(
+                                          minWidth: effectiveMinWidth,
+                                          maxWidth: effectiveMaxWidth,
+                                          minHeight: buttonHeight,
+                                        ),
+                                        height: buttonHeight,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.withOpacity(
+                                                0.1,
+                                              ),
+                                              spreadRadius: 1,
+                                              blurRadius: 5,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            'My Appointments',
+                                            style: TextStyle(
+                                              color: const Color(0xFF1A1A1A),
+                                              fontSize: buttonFontSize,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Text(
-                                    'My Appointments',
-                                    style: TextStyle(
-                                      color: Color(0xFF1A1A1A),
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 6),
-                                  // Small tail image (doctors/patients icon)
-                                  Container(
-                                    width: 24,
-                                    height: 24,
-                                    decoration: BoxDecoration(
-                                      color: const Color(
-                                        0xFF9370DB,
-                                      ).withOpacity(0.1),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Icon(
-                                      Icons.people,
-                                      size: 14,
-                                      color: Color(0xFF9370DB),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            ],
                           ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
                   ),
 
@@ -318,12 +399,21 @@ class _HomeScreenState extends State<HomeScreen> {
                           // First row with only 2 containers - using GridView to maintain original size
                           GridView.builder(
                             gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 15,
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount:
+                                      ResponsiveHelper.gridCrossAxisCount(
+                                        context,
+                                      ),
+                                  crossAxisSpacing:
+                                      ResponsiveHelper.responsiveSpacing(
+                                        context,
+                                        15,
+                                      ),
                                   mainAxisSpacing: 0,
                                   childAspectRatio:
-                                      1.1, // Increased size - smaller ratio = larger containers
+                                      ResponsiveHelper.isMobile(context)
+                                      ? 1.1
+                                      : 1.2,
                                 ),
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
@@ -362,13 +452,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       // Remaining containers in grid
                       GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 15,
-                              mainAxisSpacing: 0,
-                              childAspectRatio: 1.1,
-                            ),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: ResponsiveHelper.gridCrossAxisCount(
+                            context,
+                          ),
+                          crossAxisSpacing: ResponsiveHelper.responsiveSpacing(
+                            context,
+                            15,
+                          ),
+                          mainAxisSpacing: 0,
+                          childAspectRatio: ResponsiveHelper.isMobile(context)
+                              ? 1.1
+                              : 1.2,
+                        ),
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: _serviceCategories.isNotEmpty
@@ -544,29 +640,41 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        const SizedBox(height: 15),
-        SizedBox(
-          height: 240, // Increased height to prevent overflow
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemCount: _salonsNearYou.isNotEmpty ? _salonsNearYou.length : 3,
-            itemBuilder: (context, index) {
-              if (_salonsNearYou.isNotEmpty) {
-                return _buildSalonCard(_salonsNearYou[index]);
-              }
-              return _buildSalonCardPlaceholder();
-            },
-          ),
+        SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 15)),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            return SizedBox(
+              height: ResponsiveHelper.isMobile(context)
+                  ? 240
+                  : ResponsiveHelper.isTablet(context)
+                  ? 280
+                  : 320,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: ResponsiveHelper.responsivePadding(context),
+                itemCount: _salonsNearYou.isNotEmpty
+                    ? _salonsNearYou.length
+                    : 3,
+                itemBuilder: (context, index) {
+                  if (_salonsNearYou.isNotEmpty) {
+                    return _buildSalonCard(_salonsNearYou[index], context);
+                  }
+                  return _buildSalonCardPlaceholder(context);
+                },
+              ),
+            );
+          },
         ),
       ],
     );
   }
 
-  Widget _buildSalonCard(Map<String, dynamic> salon) {
+  Widget _buildSalonCard(Map<String, dynamic> salon, BuildContext context) {
     return Container(
-      width: 180, // Increased width for bigger container
-      margin: const EdgeInsets.only(right: 15),
+      width: ResponsiveHelper.cardWidth(context),
+      margin: EdgeInsets.only(
+        right: ResponsiveHelper.responsiveSpacing(context, 15),
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
@@ -584,38 +692,46 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Image from API
-          Container(
-            height: 140, // Increased image height
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(15),
-                topRight: Radius.circular(15),
-              ),
-            ),
-            child: salon['imageUrl'] != null
-                ? ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15),
-                    ),
-                    child: Image.network(
-                      salon['imageUrl'],
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Center(
-                          child: Icon(
-                            Icons.image_not_supported,
-                            color: Colors.grey,
-                            size: 40,
-                          ),
-                        );
-                      },
-                    ),
-                  )
-                : const Center(
-                    child: Icon(Icons.image, color: Colors.grey, size: 40),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return Container(
+                height: ResponsiveHelper.isMobile(context)
+                    ? 140
+                    : ResponsiveHelper.isTablet(context)
+                    ? 160
+                    : 180,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15),
                   ),
+                ),
+                child: salon['imageUrl'] != null
+                    ? ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15),
+                        ),
+                        child: Image.network(
+                          salon['imageUrl'],
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Center(
+                              child: Icon(
+                                Icons.image_not_supported,
+                                color: Colors.grey,
+                                size: 40,
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    : const Center(
+                        child: Icon(Icons.image, color: Colors.grey, size: 40),
+                      ),
+              );
+            },
           ),
 
           // Salon details from API
@@ -678,10 +794,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildSalonCardPlaceholder() {
+  Widget _buildSalonCardPlaceholder(BuildContext context) {
     return Container(
-      width: 180,
-      margin: const EdgeInsets.only(right: 15),
+      width: ResponsiveHelper.cardWidth(context),
+      margin: EdgeInsets.only(
+        right: ResponsiveHelper.responsiveSpacing(context, 15),
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
@@ -730,29 +848,41 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        const SizedBox(height: 15),
-        SizedBox(
-          height: 250, // Increased height to prevent overflow
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemCount: _beautyProducts.isNotEmpty ? _beautyProducts.length : 3,
-            itemBuilder: (context, index) {
-              if (_beautyProducts.isNotEmpty) {
-                return _buildProductCard(_beautyProducts[index]);
-              }
-              return _buildProductCardPlaceholder();
-            },
-          ),
+        SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 15)),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            return SizedBox(
+              height: ResponsiveHelper.isMobile(context)
+                  ? 250
+                  : ResponsiveHelper.isTablet(context)
+                  ? 300
+                  : 350,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: ResponsiveHelper.responsivePadding(context),
+                itemCount: _beautyProducts.isNotEmpty
+                    ? _beautyProducts.length
+                    : 3,
+                itemBuilder: (context, index) {
+                  if (_beautyProducts.isNotEmpty) {
+                    return _buildProductCard(_beautyProducts[index], context);
+                  }
+                  return _buildProductCardPlaceholder(context);
+                },
+              ),
+            );
+          },
         ),
       ],
     );
   }
 
-  Widget _buildProductCard(Map<String, dynamic> product) {
+  Widget _buildProductCard(Map<String, dynamic> product, BuildContext context) {
     return Container(
-      width: 160, // Increased width for bigger container
-      margin: const EdgeInsets.only(right: 15),
+      width: ResponsiveHelper.cardWidth(context),
+      margin: EdgeInsets.only(
+        right: ResponsiveHelper.responsiveSpacing(context, 15),
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),
@@ -770,42 +900,50 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Product image from API
-          Container(
-            height: 150, // Increased image height
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(15),
-                topRight: Radius.circular(15),
-              ),
-            ),
-            child: product['imageUrl'] != null
-                ? ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15),
-                    ),
-                    child: Image.network(
-                      product['imageUrl'],
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Center(
-                          child: Icon(
-                            Icons.image_not_supported,
-                            color: Colors.grey,
-                            size: 40,
-                          ),
-                        );
-                      },
-                    ),
-                  )
-                : const Center(
-                    child: Icon(
-                      Icons.shopping_bag,
-                      color: Colors.grey,
-                      size: 40,
-                    ),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return Container(
+                height: ResponsiveHelper.isMobile(context)
+                    ? 150
+                    : ResponsiveHelper.isTablet(context)
+                    ? 180
+                    : 200,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15),
                   ),
+                ),
+                child: product['imageUrl'] != null
+                    ? ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15),
+                        ),
+                        child: Image.network(
+                          product['imageUrl'],
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Center(
+                              child: Icon(
+                                Icons.image_not_supported,
+                                color: Colors.grey,
+                                size: 40,
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    : const Center(
+                        child: Icon(
+                          Icons.shopping_bag,
+                          color: Colors.grey,
+                          size: 40,
+                        ),
+                      ),
+              );
+            },
           ),
 
           // Product details from API
@@ -855,10 +993,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildProductCardPlaceholder() {
+  Widget _buildProductCardPlaceholder(BuildContext context) {
     return Container(
-      width: 160,
-      margin: const EdgeInsets.only(right: 15),
+      width: ResponsiveHelper.cardWidth(context),
+      margin: EdgeInsets.only(
+        right: ResponsiveHelper.responsiveSpacing(context, 15),
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(15),

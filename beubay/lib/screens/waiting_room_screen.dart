@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:beubay/screens/video_call_screen.dart';
 import 'package:beubay/models/booking_models.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 class WaitingRoomScreen extends StatefulWidget {
   final StylistOption doctor;
@@ -80,11 +81,11 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Waiting Room',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 20),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -92,12 +93,12 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: ResponsiveHelper.responsivePadding(context),
           child: Column(
             children: [
               // Doctor Information
               Container(
-                padding: const EdgeInsets.all(20),
+                padding: ResponsiveHelper.responsivePadding(context),
                 decoration: BoxDecoration(
                   color: Colors.grey[50],
                   borderRadius: BorderRadius.circular(16),
@@ -105,49 +106,57 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                 child: Column(
                   children: [
                     // Doctor Image
-                    Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.person,
-                        size: 50,
-                        color: Colors.grey,
-                      ),
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final avatarSize = ResponsiveHelper.isMobile(context) ? 100.0 : ResponsiveHelper.isTablet(context) ? 120.0 : 140.0;
+                        return Container(
+                          width: avatarSize,
+                          height: avatarSize,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.person,
+                            size: avatarSize * 0.5,
+                            color: Colors.grey,
+                          ),
+                        );
+                      },
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 16)),
                     Text(
                       widget.doctor.name,
-                      style: const TextStyle(
-                        fontSize: 20,
+                      style: TextStyle(
+                        fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 20),
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
                     ),
                     if (widget.doctor.title != null) ...[
-                      const SizedBox(height: 4),
+                      SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 4)),
                       Text(
                         widget.doctor.title!,
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                           color: Colors.grey[600],
                         ),
                       ),
                     ],
-                    const SizedBox(height: 16),
+                    SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 16)),
                     ElevatedButton.icon(
                       onPressed: _joinVideoCall,
-                      icon: const Icon(Icons.videocam, size: 20),
-                      label: const Text('VIDEO CALL'),
+                      icon: Icon(
+                        Icons.videocam,
+                        size: ResponsiveHelper.responsiveFontSize(context, mobile: 20),
+                      ),
+                      label: Text('VIDEO CALL'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF9370DB),
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 32,
-                          vertical: 12,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: ResponsiveHelper.responsiveSpacing(context, 32),
+                          vertical: ResponsiveHelper.responsiveSpacing(context, 12),
                         ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
@@ -157,41 +166,41 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 32)),
               // Countdown
               Column(
                 children: [
-                  const Text(
+                  Text(
                     'You are up next!',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 18),
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 16)),
                   Text(
                     '$_minutes mins $_seconds secs',
-                    style: const TextStyle(
-                      fontSize: 32,
+                    style: TextStyle(
+                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 32),
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF9370DB),
+                      color: const Color(0xFF9370DB),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 8)),
                   Text(
                     'Please stay on this screen',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                       color: Colors.grey[600],
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 32),
+              SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 32)),
               // Notification Toggle
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: ResponsiveHelper.responsivePadding(context),
                 decoration: BoxDecoration(
                   color: Colors.grey[50],
                   borderRadius: BorderRadius.circular(12),
@@ -199,10 +208,10 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
+                    Text(
                       'Notify me when ready',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
                       ),
@@ -219,10 +228,10 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
+              SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 24)),
               // Connection Check
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: ResponsiveHelper.responsivePadding(context),
                 decoration: BoxDecoration(
                   color: Colors.grey[50],
                   borderRadius: BorderRadius.circular(12),
@@ -232,34 +241,36 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                   children: [
                     Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.check_circle,
                           color: Colors.green,
-                          size: 24,
+                          size: ResponsiveHelper.responsiveFontSize(context, mobile: 24),
                         ),
-                        const SizedBox(width: 12),
-                        const Text(
+                        SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 12)),
+                        Text(
                           'Connection Check',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                             fontWeight: FontWeight.w600,
                             color: Colors.black,
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 8)),
                     Padding(
-                      padding: const EdgeInsets.only(left: 36),
+                      padding: EdgeInsets.only(
+                        left: ResponsiveHelper.responsiveSpacing(context, 36),
+                      ),
                       child: Text(
                         'Signal strength good',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                           color: Colors.grey[600],
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 16)),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton.icon(
@@ -271,12 +282,17 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                             ),
                           );
                         },
-                        icon: const Icon(Icons.videocam, size: 18),
-                        label: const Text('Test Audio & Video'),
+                        icon: Icon(
+                          Icons.videocam,
+                          size: ResponsiveHelper.responsiveFontSize(context, mobile: 18),
+                        ),
+                        label: Text('Test Audio & Video'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF9370DB),
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          padding: EdgeInsets.symmetric(
+                            vertical: ResponsiveHelper.responsiveSpacing(context, 12),
+                          ),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -291,7 +307,7 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
         ),
       ),
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16),
+        padding: ResponsiveHelper.responsivePadding(context),
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -312,38 +328,42 @@ class _WaitingRoomScreenState extends State<WaitingRoomScreen> {
                 },
                 style: OutlinedButton.styleFrom(
                   foregroundColor: const Color(0xFF9370DB),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  padding: EdgeInsets.symmetric(
+                    vertical: ResponsiveHelper.responsiveSpacing(context, 14),
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                   side: const BorderSide(color: Color(0xFF9370DB)),
                 ),
-                child: const Text(
+                child: Text(
                   'Leave Queue',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 12)),
             Expanded(
               child: ElevatedButton(
                 onPressed: _joinVideoCall,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF9370DB),
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  padding: EdgeInsets.symmetric(
+                    vertical: ResponsiveHelper.responsiveSpacing(context, 14),
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                   elevation: 0,
                 ),
-                child: const Text(
+                child: Text(
                   'Video Call',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                     fontWeight: FontWeight.w600,
                   ),
                 ),

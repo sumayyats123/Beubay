@@ -9,6 +9,7 @@ import 'package:beubay/screens/settings_screen.dart';
 import 'package:beubay/screens/search_results_screen.dart';
 import 'package:beubay/screens/cart_screen.dart';
 import 'package:beubay/screens/category_subcategories_screen.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 class CosmeticScreen extends StatefulWidget {
   const CosmeticScreen({super.key});
@@ -196,34 +197,45 @@ class _CosmeticScreenState extends State<CosmeticScreen> {
                         children: [
                           GestureDetector(
                             onTap: _handleCartTap,
-                            child: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.3),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.shopping_cart_outlined,
-                                color: Colors.white,
-                                size: 20,
-                              ),
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                final iconSize = ResponsiveHelper.isMobile(context) ? 40.0 : ResponsiveHelper.isTablet(context) ? 48.0 : 56.0;
+                                return Container(
+                                  width: iconSize,
+                                  height: iconSize,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.3),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.shopping_cart_outlined,
+                                    color: Colors.white,
+                                    size: iconSize * 0.5,
+                                  ),
+                                );
+                              },
                             ),
                           ),
-                          const SizedBox(width: 10),
+                          SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 10)),
                           GestureDetector(
                             onTap: _handleProfileTap,
-                            child: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.3),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.person,
-                                color: Colors.white,
-                              ),
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                final iconSize = ResponsiveHelper.isMobile(context) ? 40.0 : ResponsiveHelper.isTablet(context) ? 48.0 : 56.0;
+                                return Container(
+                                  width: iconSize,
+                                  height: iconSize,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.3),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.person,
+                                    color: Colors.white,
+                                    size: iconSize * 0.5,
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ],
@@ -236,12 +248,12 @@ class _CosmeticScreenState extends State<CosmeticScreen> {
                   Transform.translate(
                     offset: const Offset(0, -10),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: ResponsiveHelper.responsiveSpacing(context, 20),
+                        vertical: ResponsiveHelper.responsiveSpacing(context, 10),
                       ),
                       child: Container(
-                        height: 50,
+                        height: ResponsiveHelper.isMobile(context) ? 50.0 : ResponsiveHelper.isTablet(context) ? 56.0 : 60.0,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
@@ -258,24 +270,29 @@ class _CosmeticScreenState extends State<CosmeticScreen> {
                           controller: _searchController,
                           decoration: InputDecoration(
                             hintText: "Search 'face wash'",
-                            hintStyle: const TextStyle(
+                            hintStyle: TextStyle(
                               color: Colors.grey,
-                              fontSize: 14,
+                              fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                             ),
-                            prefixIcon: const Icon(
+                            prefixIcon: Icon(
                               Icons.search,
                               color: Colors.grey,
+                              size: ResponsiveHelper.responsiveFontSize(context, mobile: 24),
                             ),
                             suffixIcon: GestureDetector(
                               onTap: () {
                                 // Filter action
                               },
-                              child: const Icon(Icons.tune, color: Colors.grey),
+                              child: Icon(
+                                Icons.tune,
+                                color: Colors.grey,
+                                size: ResponsiveHelper.responsiveFontSize(context, mobile: 24),
+                              ),
                             ),
                             border: InputBorder.none,
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: ResponsiveHelper.responsiveSpacing(context, 16),
+                              vertical: ResponsiveHelper.responsiveSpacing(context, 12),
                             ),
                           ),
                           onSubmitted: (_) => _handleSearch(),
@@ -284,15 +301,17 @@ class _CosmeticScreenState extends State<CosmeticScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 15),
+                  SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 15)),
 
                   // Main Banner - "SHOP THE BEAUTY TRENDS" - Vertical
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: ResponsiveHelper.responsiveSpacing(context, 30),
+                    ),
                     child: _buildMainBanner(),
                   ),
 
-                  const SizedBox(height: 30),
+                  SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 30)),
                 ],
               ),
             ),
@@ -340,12 +359,15 @@ class _CosmeticScreenState extends State<CosmeticScreen> {
         children: [
           // Overlay text at top
           Padding(
-            padding: const EdgeInsets.only(left: 20, top: 30),
-            child: const Text(
+            padding: EdgeInsets.only(
+              left: ResponsiveHelper.responsiveSpacing(context, 20),
+              top: ResponsiveHelper.responsiveSpacing(context, 30),
+            ),
+            child: Text(
               'SHOP THE BEAUTY TRENDS',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 24,
+                fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 24),
                 fontWeight: FontWeight.w300,
                 letterSpacing: 1.5,
               ),
@@ -581,121 +603,137 @@ class _CosmeticScreenState extends State<CosmeticScreen> {
           '',
     );
 
-    return Container(
-      width: 150,
-      margin: const EdgeInsets.only(right: 15),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, 2),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final cardWidth = ResponsiveHelper.isMobile(context) ? 150.0 : ResponsiveHelper.isTablet(context) ? 180.0 : 200.0;
+        final imageHeight = ResponsiveHelper.isMobile(context) ? 120.0 : ResponsiveHelper.isTablet(context) ? 140.0 : 160.0;
+        return Container(
+          width: cardWidth,
+          margin: EdgeInsets.only(
+            right: ResponsiveHelper.responsiveSpacing(context, 15),
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Product Image
-          Container(
-            height: 120,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(15),
-                topRight: Radius.circular(15),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: const Offset(0, 2),
               ),
-            ),
-            child: imageUrl != null && imageUrl.toString().isNotEmpty
-                ? ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15),
-                    ),
-                    child: Image.network(
-                      imageUrl.toString(),
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return const Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Color(0xFF9370DB),
-                            ),
-                          ),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Center(
-                          child: Icon(
-                            Icons.inventory_2_outlined,
-                            color: Colors.grey,
-                            size: 40,
-                          ),
-                        );
-                      },
-                    ),
-                  )
-                : const Center(
-                    child: Icon(
-                      Icons.inventory_2_outlined,
-                      color: Colors.grey,
-                      size: 40,
-                    ),
-                  ),
+            ],
           ),
-          // Product Info
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF1A1A1A),
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                if (brand.isNotEmpty)
-                  Text(
-                    brand,
-                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                if (details.isNotEmpty) ...[
-                  const SizedBox(height: 4),
-                  Text(
-                    details,
-                    style: TextStyle(fontSize: 11, color: Colors.grey[500]),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-                const SizedBox(height: 4),
-                Text(
-                  price,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1A1A1A),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Product Image
+              Container(
+                height: imageHeight,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.grey[200],
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15),
                   ),
                 ),
-              ],
-            ),
+                child: imageUrl != null && imageUrl.toString().isNotEmpty
+                    ? ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15),
+                        ),
+                        child: Image.network(
+                          imageUrl.toString(),
+                          fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: const AlwaysStoppedAnimation<Color>(
+                                  Color(0xFF9370DB),
+                                ),
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return Center(
+                              child: Icon(
+                                Icons.inventory_2_outlined,
+                                color: Colors.grey,
+                                size: imageHeight * 0.33,
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    : Center(
+                        child: Icon(
+                          Icons.inventory_2_outlined,
+                          color: Colors.grey,
+                          size: imageHeight * 0.33,
+                        ),
+                      ),
+              ),
+              // Product Info
+              Padding(
+                padding: EdgeInsets.all(
+                  ResponsiveHelper.responsiveSpacing(context, 12),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: TextStyle(
+                        fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF1A1A1A),
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 4)),
+                    if (brand.isNotEmpty)
+                      Text(
+                        brand,
+                        style: TextStyle(
+                          fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 12),
+                          color: Colors.grey[600],
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    if (details.isNotEmpty) ...[
+                      SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 4)),
+                      Text(
+                        details,
+                        style: TextStyle(
+                          fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 11),
+                          color: Colors.grey[500],
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                    SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 4)),
+                    Text(
+                      price,
+                      style: TextStyle(
+                        fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xFF1A1A1A),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -719,61 +757,75 @@ class _CosmeticScreenState extends State<CosmeticScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Category Image or Icon
-          if (imageUrl != null && imageUrl.toString().isNotEmpty)
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                imageUrl.toString(),
-                width: 50,
-                height: 50,
-                fit: BoxFit.cover,
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress == null) return child;
-                  return const SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Color(0xFF9370DB),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF9370DB).withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: icon != null
-                        ? Icon(icon, size: 30, color: const Color(0xFF9370DB))
-                        : const Icon(
-                            Icons.category,
-                            size: 30,
-                            color: Color(0xFF9370DB),
+            if (imageUrl != null && imageUrl.toString().isNotEmpty)
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final iconSize = ResponsiveHelper.isMobile(context) ? 50.0 : ResponsiveHelper.isTablet(context) ? 60.0 : 70.0;
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    imageUrl.toString(),
+                    width: iconSize,
+                    height: iconSize,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return SizedBox(
+                        width: iconSize,
+                        height: iconSize,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                              Color(0xFF9370DB),
+                            ),
                           ),
-                  );
-                },
-              ),
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: iconSize,
+                        height: iconSize,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF9370DB).withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: icon != null
+                            ? Icon(
+                                icon,
+                                size: iconSize * 0.6,
+                                color: const Color(0xFF9370DB),
+                              )
+                            : Icon(
+                                Icons.category,
+                                size: iconSize * 0.6,
+                                color: const Color(0xFF9370DB),
+                              ),
+                      );
+                    },
+                  ),
+                );
+              },
             )
           else
-            Icon(
-              icon ?? Icons.category,
-              size: 30,
-              color: const Color(0xFF9370DB),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final iconSize = ResponsiveHelper.isMobile(context) ? 30.0 : ResponsiveHelper.isTablet(context) ? 36.0 : 42.0;
+                return Icon(
+                  icon ?? Icons.category,
+                  size: iconSize,
+                  color: const Color(0xFF9370DB),
+                );
+              },
             ),
-          const SizedBox(height: 8),
+          SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 8)),
           Text(
             name,
-            style: const TextStyle(
-              fontSize: 12,
+            style: TextStyle(
+              fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 12),
               fontWeight: FontWeight.w500,
-              color: Color(0xFF1A1A1A),
+              color: const Color(0xFF1A1A1A),
             ),
             textAlign: TextAlign.center,
             maxLines: 2,

@@ -3,6 +3,7 @@ import 'package:beubay/screens/profile_screen.dart';
 import 'package:beubay/screens/help_support_screen.dart';
 import 'package:beubay/screens/refund_screen.dart';
 import 'package:beubay/screens/wishlist_screen.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -23,11 +24,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Settings',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 20),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -83,72 +84,82 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 20),
+            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 20)),
             // User Profile Section
             Column(
               children: [
                 // Profile Picture
-                Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: const Color(0xFF9370DB),
-                      width: 3,
-                    ),
-                  ),
-                  child: ClipOval(
-                    child: Image.asset(
-                      'assets/images/profile_placeholder.png',
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey[200],
-                          child: const Icon(
-                            Icons.person,
-                            size: 50,
-                            color: Colors.grey,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final avatarSize = ResponsiveHelper.isMobile(context) ? 100.0 : ResponsiveHelper.isTablet(context) ? 120.0 : 140.0;
+                    return Container(
+                      width: avatarSize,
+                      height: avatarSize,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: const Color(0xFF9370DB),
+                          width: 3,
+                        ),
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          'assets/images/profile_placeholder.png',
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.grey[200],
+                              child: Icon(
+                                Icons.person,
+                                size: avatarSize * 0.5,
+                                color: Colors.grey,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 16)),
                 // User Name
-                const Text(
+                Text(
                   'Ammulya Jones',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 20),
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 4)),
                 // Email
                 Text(
                   'ammulya123@gmail.com',
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                  style: TextStyle(
+                    fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
+                    color: Colors.grey[600],
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 32)),
             // Your Informations Section
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.responsiveSpacing(context, 20),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Your Informations',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 8)),
                   _buildMenuItem('Your Refunds', () {
                     Navigator.push(
                       context,
@@ -195,13 +206,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 32)),
             // Logout Button
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.responsiveSpacing(context, 20),
+              ),
               child: SizedBox(
                 width: double.infinity,
-                height: 50,
+                height: ResponsiveHelper.isMobile(context) ? 50.0 : ResponsiveHelper.isTablet(context) ? 56.0 : 60.0,
                 child: ElevatedButton(
                   onPressed: () {
                     _showLogoutDialog();
@@ -213,18 +226,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
+                  child: Text(
                     'LOG OUT',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 32)),
           ],
         ),
       ),
@@ -235,19 +248,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: EdgeInsets.symmetric(
+          vertical: ResponsiveHelper.responsiveSpacing(context, 16),
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               title,
-              style: const TextStyle(
-                fontSize: 16,
+              style: TextStyle(
+                fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                 color: Colors.black,
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const Icon(Icons.chevron_right, color: Colors.grey, size: 20),
+            Icon(
+              Icons.chevron_right,
+              color: Colors.grey,
+              size: ResponsiveHelper.responsiveFontSize(context, mobile: 20),
+            ),
           ],
         ),
       ),

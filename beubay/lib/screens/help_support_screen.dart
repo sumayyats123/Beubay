@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 class HelpSupportScreen extends StatefulWidget {
   const HelpSupportScreen({super.key});
@@ -77,11 +78,11 @@ class _HelpSupportScreenState extends State<HelpSupportScreen>
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Help Center',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 20),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -100,12 +101,12 @@ class _HelpSupportScreenState extends State<HelpSupportScreen>
           indicatorWeight: 3,
           labelColor: const Color(0xFF9370DB),
           unselectedLabelColor: Colors.grey,
-          labelStyle: const TextStyle(
-            fontSize: 16,
+          labelStyle: TextStyle(
+            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
             fontWeight: FontWeight.w600,
           ),
-          unselectedLabelStyle: const TextStyle(
-            fontSize: 16,
+          unselectedLabelStyle: TextStyle(
+            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
             fontWeight: FontWeight.normal,
           ),
           tabs: const [
@@ -126,7 +127,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen>
       children: [
         // Search Bar
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: ResponsiveHelper.responsivePadding(context),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.grey[100],
@@ -161,7 +162,9 @@ class _HelpSupportScreenState extends State<HelpSupportScreen>
         // FAQ List
         Expanded(
           child: ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(
+              horizontal: ResponsiveHelper.responsiveSpacing(context, 16),
+            ),
             itemCount: _filteredFAQItems.length,
             itemBuilder: (context, index) {
               return _buildFAQItem(_filteredFAQItems[index]);
@@ -178,7 +181,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen>
 
   Widget _buildContactUsTab() {
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: ResponsiveHelper.responsivePadding(context),
       children: [
         _buildContactItem(
           title: 'Customer Services',
@@ -188,7 +191,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen>
             _showContactDialog('Customer Services');
           },
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 12)),
         _buildContactItem(
           title: 'Whatsapp',
           icon: Icons.chat,
@@ -197,7 +200,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen>
             _launchWhatsApp();
           },
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 12)),
         _buildContactItem(
           title: 'Website',
           icon: Icons.language,
@@ -205,7 +208,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen>
             _launchWebsite();
           },
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 12)),
         _buildContactItem(
           title: 'Facebook',
           icon: Icons.people,
@@ -214,7 +217,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen>
             _launchFacebook();
           },
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 12)),
         _buildContactItem(
           title: 'Twitter',
           icon: Icons.alternate_email,
@@ -223,7 +226,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen>
             _launchTwitter();
           },
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 12)),
         _buildContactItem(
           title: 'Instagram',
           icon: Icons.camera_alt,
@@ -246,7 +249,7 @@ class _HelpSupportScreenState extends State<HelpSupportScreen>
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: ResponsiveHelper.responsivePadding(context),
         decoration: BoxDecoration(
           color: Colors.grey[50],
           borderRadius: BorderRadius.circular(12),
@@ -254,25 +257,39 @@ class _HelpSupportScreenState extends State<HelpSupportScreen>
         ),
         child: Row(
           children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: (iconColor ?? const Color(0xFF9370DB)).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(
-                icon,
-                color: iconColor ?? const Color(0xFF9370DB),
-                size: 24,
-              ),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final iconSize = ResponsiveHelper.isMobile(context)
+                    ? 48.0
+                    : ResponsiveHelper.isTablet(context)
+                    ? 56.0
+                    : 64.0;
+                return Container(
+                  width: iconSize,
+                  height: iconSize,
+                  decoration: BoxDecoration(
+                    color: (iconColor ?? const Color(0xFF9370DB)).withOpacity(
+                      0.1,
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    icon,
+                    color: iconColor ?? const Color(0xFF9370DB),
+                    size: iconSize * 0.5,
+                  ),
+                );
+              },
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 16)),
             Expanded(
               child: Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 16,
+                style: TextStyle(
+                  fontSize: ResponsiveHelper.responsiveFontSize(
+                    context,
+                    mobile: 16,
+                  ),
                   fontWeight: FontWeight.w500,
                   color: Colors.black,
                 ),
@@ -397,7 +414,9 @@ class _ExpandableFAQItemState extends State<_ExpandableFAQItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: EdgeInsets.only(
+        bottom: ResponsiveHelper.responsiveSpacing(context, 12),
+      ),
       decoration: BoxDecoration(
         color: Colors.grey[50],
         borderRadius: BorderRadius.circular(12),
@@ -413,20 +432,25 @@ class _ExpandableFAQItemState extends State<_ExpandableFAQItem> {
             },
             borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: ResponsiveHelper.responsivePadding(context),
               child: Row(
                 children: [
                   Expanded(
                     child: Text(
                       widget.faqItem.question,
-                      style: const TextStyle(
-                        fontSize: 16,
+                      style: TextStyle(
+                        fontSize: ResponsiveHelper.responsiveFontSize(
+                          context,
+                          mobile: 16,
+                        ),
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  SizedBox(
+                    width: ResponsiveHelper.responsiveSpacing(context, 12),
+                  ),
                   Icon(
                     _isExpanded
                         ? Icons.keyboard_arrow_up
@@ -439,11 +463,19 @@ class _ExpandableFAQItemState extends State<_ExpandableFAQItem> {
           ),
           if (_isExpanded)
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              padding: EdgeInsets.fromLTRB(
+                ResponsiveHelper.responsiveSpacing(context, 16),
+                0,
+                ResponsiveHelper.responsiveSpacing(context, 16),
+                ResponsiveHelper.responsiveSpacing(context, 16),
+              ),
               child: Text(
                 widget.faqItem.answer,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: ResponsiveHelper.responsiveFontSize(
+                    context,
+                    mobile: 14,
+                  ),
                   color: Colors.grey[700],
                   height: 1.5,
                 ),

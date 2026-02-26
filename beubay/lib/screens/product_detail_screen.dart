@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:beubay/services/api_client.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Map<String, dynamic> product;
@@ -132,12 +133,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.inventory_2_outlined, size: 200, color: Colors.grey[400]),
-          const SizedBox(height: 20),
+          Icon(
+            Icons.inventory_2_outlined,
+            size: ResponsiveHelper.isMobile(context) ? 200.0 : ResponsiveHelper.isTablet(context) ? 240.0 : 280.0,
+            color: Colors.grey[400],
+          ),
+          SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 20)),
           Text(
             _getAngleLabel(imageUrl),
             style: TextStyle(
-              fontSize: 18,
+              fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 18),
               fontWeight: FontWeight.w500,
               color: Colors.grey[600],
             ),
@@ -167,16 +172,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
+              Icon(
                 Icons.inventory_2_outlined,
-                size: 200,
+                size: ResponsiveHelper.isMobile(context) ? 200.0 : ResponsiveHelper.isTablet(context) ? 240.0 : 280.0,
                 color: Colors.grey,
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 20)),
               Text(
                 _getAngleLabel(imageUrl),
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 18),
                   fontWeight: FontWeight.w500,
                   color: Colors.grey[600],
                 ),
@@ -394,7 +399,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const SizedBox(height: 18),
+                                    SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 18)),
                                     // Name and Price on same row
                                     Row(
                                       mainAxisAlignment:
@@ -405,8 +410,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         Expanded(
                                           child: Text(
                                             productName,
-                                            style: const TextStyle(
-                                              fontSize: 28,
+                                            style: TextStyle(
+                                              fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 28),
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black,
                                             ),
@@ -414,18 +419,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
-                                        const SizedBox(width: 16),
+                                        SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 16)),
                                         Text(
                                           sellingPrice,
-                                          style: const TextStyle(
-                                            fontSize: 24,
+                                          style: TextStyle(
+                                            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 24),
                                             fontWeight: FontWeight.bold,
-                                            color: Color(0xFF9370DB),
+                                            color: const Color(0xFF9370DB),
                                           ),
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: 20),
+                                    SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 20)),
                                     // Down Arrow at bottom
                                     Center(
                                       child: GestureDetector(
@@ -455,18 +460,23 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                 child: InkWell(
                                   onTap: _handleAddToCart,
                                   borderRadius: BorderRadius.circular(20),
-                                  child: Container(
-                                    width: 48,
-                                    height: 48,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.black87,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Icon(
-                                      Icons.shopping_cart,
-                                      color: Colors.white,
-                                      size: 24,
-                                    ),
+                                  child: LayoutBuilder(
+                                    builder: (context, constraints) {
+                                      final cartIconSize = ResponsiveHelper.isMobile(context) ? 48.0 : ResponsiveHelper.isTablet(context) ? 56.0 : 64.0;
+                                      return Container(
+                                        width: cartIconSize,
+                                        height: cartIconSize,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.black87,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.shopping_cart,
+                                          color: Colors.white,
+                                          size: cartIconSize * 0.5,
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                               ),
@@ -527,10 +537,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 20),
+                        SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 20)),
                         // Description
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: ResponsiveHelper.responsiveSpacing(context, 20),
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -539,7 +551,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                     ? productDescription
                                     : 'A daily, gentle exfoliating, acne fighting face cleanser. It contains lha + aha (salicylic acid + capryloyl salicylic acid) in 2h concentration...',
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                                   color: Colors.grey[700],
                                   height: 1.5,
                                 ),
@@ -564,31 +576,33 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   ),
                                   child: Text(
                                     _isDescriptionExpanded ? 'less' : 'more',
-                                    style: const TextStyle(
-                                      color: Color(0xFF9370DB),
-                                      fontSize: 14,
+                                    style: TextStyle(
+                                      color: const Color(0xFF9370DB),
+                                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                                     ),
                                   ),
                                 ),
                             ],
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 20)),
                         // Choose Variants
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: ResponsiveHelper.responsiveSpacing(context, 20),
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                              Text(
                                 'CHOOSE VARIANTS',
                                 style: TextStyle(
-                                  fontSize: 16,
+                                  fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                 ),
                               ),
-                              const SizedBox(height: 12),
+                              SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 12)),
                               Wrap(
                                 spacing: 10,
                                 runSpacing: 10,
@@ -604,9 +618,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                             });
                                           },
                                           child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 20,
-                                              vertical: 12,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: ResponsiveHelper.responsiveSpacing(context, 20),
+                                              vertical: ResponsiveHelper.responsiveSpacing(context, 12),
                                             ),
                                             decoration: BoxDecoration(
                                               color: isSelected
@@ -627,7 +641,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                                 color: isSelected
                                                     ? Colors.white
                                                     : Colors.black,
-                                                fontSize: 14,
+                                                fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                                                 fontWeight: FontWeight.w500,
                                               ),
                                             ),
@@ -696,104 +710,116 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 20)),
                         // You might also like
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: ResponsiveHelper.responsiveSpacing(context, 20),
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
+                              Text(
                                 'You might also like',
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 18),
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                 ),
                               ),
-                              const SizedBox(height: 15),
-                              SizedBox(
-                                height: 220,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: 4,
-                                  itemBuilder: (context, index) {
-                                    return Container(
-                                      width: 150,
-                                      margin: const EdgeInsets.only(right: 15),
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[100],
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[200],
-                                                borderRadius:
-                                                    const BorderRadius.only(
-                                                      topLeft: Radius.circular(
-                                                        12,
+                              SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 15)),
+                              LayoutBuilder(
+                                builder: (context, constraints) {
+                                  final cardHeight = ResponsiveHelper.isMobile(context) ? 220.0 : ResponsiveHelper.isTablet(context) ? 260.0 : 300.0;
+                                  final cardWidth = ResponsiveHelper.isMobile(context) ? 150.0 : ResponsiveHelper.isTablet(context) ? 180.0 : 200.0;
+                                  return SizedBox(
+                                    height: cardHeight,
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: 4,
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          width: cardWidth,
+                                          margin: EdgeInsets.only(
+                                            right: ResponsiveHelper.responsiveSpacing(context, 15),
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[100],
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Expanded(
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey[200],
+                                                    borderRadius:
+                                                        const BorderRadius.only(
+                                                          topLeft: Radius.circular(
+                                                            12,
+                                                          ),
+                                                          topRight: Radius.circular(
+                                                            12,
+                                                          ),
+                                                        ),
+                                                  ),
+                                                  child: Center(
+                                                    child: Icon(
+                                                      Icons.inventory_2_outlined,
+                                                      size: ResponsiveHelper.isMobile(context) ? 60.0 : ResponsiveHelper.isTablet(context) ? 70.0 : 80.0,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.all(
+                                                  ResponsiveHelper.responsiveSpacing(context, 12),
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Glow Serum',
+                                                      style: TextStyle(
+                                                        fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
+                                                        fontWeight: FontWeight.bold,
+                                                        color: const Color(0xFF1A1A1A),
                                                       ),
-                                                      topRight: Radius.circular(
-                                                        12,
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                    SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 4)),
+                                                    Text(
+                                                      '₹1299',
+                                                      style: TextStyle(
+                                                        fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
+                                                        fontWeight: FontWeight.bold,
+                                                        color: Colors.grey[700],
                                                       ),
                                                     ),
-                                              ),
-                                              child: const Center(
-                                                child: Icon(
-                                                  Icons.inventory_2_outlined,
-                                                  size: 60,
-                                                  color: Colors.grey,
+                                                  ],
                                                 ),
                                               ),
-                                            ),
+                                            ],
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(12),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                const Text(
-                                                  'Glow Serum',
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color(0xFF1A1A1A),
-                                                  ),
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                                const SizedBox(height: 4),
-                                                Text(
-                                                  '₹1299',
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.grey[700],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
                               ),
                             ],
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 20)),
                         // Bottom Bar with Quantity and Add to Cart
                         Container(
-                          padding: const EdgeInsets.all(20),
+                          padding: ResponsiveHelper.responsivePadding(context),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             boxShadow: [

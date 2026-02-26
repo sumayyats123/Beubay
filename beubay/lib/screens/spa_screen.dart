@@ -10,6 +10,7 @@ import 'package:beubay/services/api_client.dart';
 import 'package:beubay/screens/location_picker_screen.dart';
 import 'package:beubay/screens/profile_screen.dart';
 import 'package:beubay/screens/service_detail_screen.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 class SpaScreen extends StatefulWidget {
   const SpaScreen({super.key});
@@ -241,23 +242,27 @@ class _SpaScreenState extends State<SpaScreen> {
                   Transform.translate(
                     offset: const Offset(0, -15),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: ResponsiveHelper.responsiveSpacing(context, 20),
+                      ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.only(bottom: 8),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              bottom: ResponsiveHelper.responsiveSpacing(context, 8),
+                            ),
                             child: Text(
                               'WELLNESS & SPA',
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                                 letterSpacing: 0.5,
                               ),
                             ),
                           ),
-                          const SizedBox(height: 15),
+                          SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 15)),
                           _buildFirstServiceItem(),
                         ],
                       ),

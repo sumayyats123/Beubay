@@ -10,6 +10,7 @@ import 'package:beubay/services/api_client.dart';
 import 'package:beubay/screens/location_picker_screen.dart';
 import 'package:beubay/screens/profile_screen.dart';
 import 'package:beubay/screens/service_detail_screen.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 class SalonScreen extends StatefulWidget {
   const SalonScreen({super.key});
@@ -207,7 +208,7 @@ class _SalonScreenState extends State<SalonScreen> {
                       child: _promotionalBanners.isNotEmpty
                           ? ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(
+                              padding: EdgeInsets.symmetric(
                                 horizontal: 20,
                                 vertical: 10,
                               ),
@@ -220,7 +221,7 @@ class _SalonScreenState extends State<SalonScreen> {
                               },
                             )
                           : Padding(
-                              padding: const EdgeInsets.symmetric(
+                              padding: EdgeInsets.symmetric(
                                 horizontal: 20,
                                 vertical: 10,
                               ),
@@ -235,29 +236,33 @@ class _SalonScreenState extends State<SalonScreen> {
                     child: const CommonSearchSection(showRightButton: false),
                   ),
 
-                  const SizedBox(height: 0),
+                  SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 0)),
 
                   // Salons Section Title and First Container
                   Transform.translate(
                     offset: const Offset(0, -15),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: EdgeInsets.symmetric(
+          horizontal: ResponsiveHelper.responsiveSpacing(context, 20),
+        ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Padding(
-                            padding: EdgeInsets.only(bottom: 8),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              bottom: ResponsiveHelper.responsiveSpacing(context, 8),
+                            ),
                             child: Text(
                               'SALONS',
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                                 letterSpacing: 0.5,
                               ),
                             ),
                           ),
-                          const SizedBox(height: 15),
+                          SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 15)),
                           _buildFirstServiceItem(),
                         ],
                       ),
@@ -270,7 +275,7 @@ class _SalonScreenState extends State<SalonScreen> {
             // Remaining Salons Section Content
             _buildRemainingSalonsSection(),
 
-            const SizedBox(height: 100),
+            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 100)),
           ],
         ),
       ),
@@ -298,7 +303,9 @@ class _SalonScreenState extends State<SalonScreen> {
     if (_salonServices.length <= 1) {
       // Show placeholder containers if no services or only one service
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(
+          horizontal: ResponsiveHelper.responsiveSpacing(context, 20),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: List.generate(2, (index) => _buildServiceCardPlaceholder()),
@@ -406,7 +413,7 @@ class _SalonScreenState extends State<SalonScreen> {
                   top: 10,
                   right: 10,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
+                    padding: EdgeInsets.symmetric(
                       horizontal: 12,
                       vertical: 6,
                     ),
@@ -416,9 +423,9 @@ class _SalonScreenState extends State<SalonScreen> {
                     ),
                     child: Text(
                       service['discount'] ?? 'Get 20% off',
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
-                        fontSize: 12,
+                        fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 12),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -464,7 +471,7 @@ class _SalonScreenState extends State<SalonScreen> {
                           Text(
                             service['distance'] ?? '0.10kms',
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 12),
                               color: Colors.grey[600],
                             ),
                           ),
@@ -478,7 +485,7 @@ class _SalonScreenState extends State<SalonScreen> {
                           Text(
                             service['serviceType'] ?? 'Urban',
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 12),
                               color: Colors.grey[600],
                             ),
                           ),
@@ -492,7 +499,7 @@ class _SalonScreenState extends State<SalonScreen> {
                           Text(
                             service['rating'] ?? '4.4',
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 12),
                               color: Colors.grey[600],
                               fontWeight: FontWeight.w600,
                             ),

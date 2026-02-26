@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:beubay/screens/appointment_confirmation_screen.dart';
 import 'package:beubay/models/booking_models.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 class BookingManagementScreen extends StatefulWidget {
   final List<String> selectedServices;
@@ -53,11 +54,11 @@ class _BookingManagementScreenState extends State<BookingManagementScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Checkout',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 20),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -77,25 +78,27 @@ class _BookingManagementScreenState extends State<BookingManagementScreen> {
           children: [
             // Consultation Details Section
             _buildConsultationDetails(),
-            const SizedBox(height: 24),
+            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 24)),
             // Purposes of Visit
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.responsiveSpacing(context, 16),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Purposes of Visit',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 12)),
                   Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
+                    spacing: ResponsiveHelper.responsiveSpacing(context, 8),
+                    runSpacing: ResponsiveHelper.responsiveSpacing(context, 8),
                     children: _purposes.map((purpose) {
                       final isSelected = _selectedPurposes.contains(purpose);
                       return InkWell(
@@ -109,9 +112,9 @@ class _BookingManagementScreenState extends State<BookingManagementScreen> {
                           });
                         },
                         child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: ResponsiveHelper.responsiveSpacing(context, 16),
+                            vertical: ResponsiveHelper.responsiveSpacing(context, 8),
                           ),
                           decoration: BoxDecoration(
                             color: isSelected
@@ -123,16 +126,16 @@ class _BookingManagementScreenState extends State<BookingManagementScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               if (isSelected)
-                                const Icon(
+                                Icon(
                                   Icons.check,
-                                  size: 16,
+                                  size: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                                   color: Colors.white,
                                 ),
-                              if (isSelected) const SizedBox(width: 4),
+                              if (isSelected) SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 4)),
                               Text(
                                 purpose,
                                 style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                                   fontWeight: FontWeight.w500,
                                   color: isSelected
                                       ? Colors.white
@@ -148,29 +151,31 @@ class _BookingManagementScreenState extends State<BookingManagementScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 24)),
             // Select Date
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.responsiveSpacing(context, 16),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Select Date',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 12)),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         DateFormat('MMMM yyyy').format(_selectedDate),
-                        style: const TextStyle(
-                          fontSize: 18,
+                        style: TextStyle(
+                          fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 18),
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
@@ -203,83 +208,91 @@ class _BookingManagementScreenState extends State<BookingManagementScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
+                  SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 12)),
                   _buildCalendar(),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 24)),
             // Select Time
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.responsiveSpacing(context, 16),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Select Time',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    height: 50,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: _timeSlots.length,
-                      itemBuilder: (context, index) {
-                        final time = _timeSlots[index];
-                        final isSelected = _selectedTimes.contains(time);
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: InkWell(
-                            onTap: () {
-                              setState(() {
-                                if (isSelected) {
-                                  _selectedTimes.remove(time);
-                                } else {
-                                  _selectedTimes.add(time);
-                                }
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 12,
+                  SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 12)),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return SizedBox(
+                        height: ResponsiveHelper.isMobile(context) ? 50.0 : ResponsiveHelper.isTablet(context) ? 60.0 : 70.0,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _timeSlots.length,
+                          itemBuilder: (context, index) {
+                            final time = _timeSlots[index];
+                            final isSelected = _selectedTimes.contains(time);
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                right: ResponsiveHelper.responsiveSpacing(context, 8),
                               ),
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? const Color(0xFF9370DB)
-                                    : Colors.grey[200],
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                time,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: isSelected
-                                      ? Colors.white
-                                      : Colors.black87,
+                              child: InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    if (isSelected) {
+                                      _selectedTimes.remove(time);
+                                    } else {
+                                      _selectedTimes.add(time);
+                                    }
+                                  });
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: ResponsiveHelper.responsiveSpacing(context, 16),
+                                    vertical: ResponsiveHelper.responsiveSpacing(context, 12),
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? const Color(0xFF9370DB)
+                                        : Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    time,
+                                    style: TextStyle(
+                                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
+                                      fontWeight: FontWeight.w500,
+                                      color: isSelected
+                                          ? Colors.white
+                                          : Colors.black87,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                            );
+                          },
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 100), // Space for footer
+            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 100)), // Space for footer
           ],
         ),
       ),
       bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(16),
+        padding: ResponsiveHelper.responsivePadding(context),
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -294,19 +307,19 @@ class _BookingManagementScreenState extends State<BookingManagementScreen> {
         child: Row(
           children: [
             Expanded(
-              child: TextButton(
+                child: TextButton(
                 onPressed: () => _showCancelDialog(),
-                child: const Text(
+                child: Text(
                   'Cancel',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                     fontWeight: FontWeight.w600,
                     color: Colors.red,
                   ),
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 12)),
             Expanded(
               child: ElevatedButton(
                 onPressed: _selectedTimes.isNotEmpty
@@ -328,16 +341,18 @@ class _BookingManagementScreenState extends State<BookingManagementScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF9370DB),
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  padding: EdgeInsets.symmetric(
+                    vertical: ResponsiveHelper.responsiveSpacing(context, 14),
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                   elevation: 0,
                 ),
-                  child: const Text(
+                child: Text(
                   'Book Now',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -351,8 +366,8 @@ class _BookingManagementScreenState extends State<BookingManagementScreen> {
 
   Widget _buildConsultationDetails() {
     return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
+      margin: ResponsiveHelper.responsivePadding(context),
+      padding: ResponsiveHelper.responsivePadding(context),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -364,37 +379,42 @@ class _BookingManagementScreenState extends State<BookingManagementScreen> {
           Row(
             children: [
               // Doctor Image
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.person,
-                  size: 30,
-                  color: Colors.grey,
-                ),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final avatarSize = ResponsiveHelper.isMobile(context) ? 60.0 : ResponsiveHelper.isTablet(context) ? 70.0 : 80.0;
+                  return Container(
+                    width: avatarSize,
+                    height: avatarSize,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.person,
+                      size: avatarSize * 0.5,
+                      color: Colors.grey,
+                    ),
+                  );
+                },
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 12)),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'CONSULTATION WITH ${widget.selectedStylist.name.toUpperCase()}',
-                      style: const TextStyle(
-                        fontSize: 12,
+                      style: TextStyle(
+                        fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 12),
                         fontWeight: FontWeight.bold,
                         color: Colors.black87,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 4)),
                     Text(
                       widget.selectedStylist.title ?? 'Service Provider',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                         color: Colors.grey[700],
                       ),
                     ),
@@ -403,7 +423,7 @@ class _BookingManagementScreenState extends State<BookingManagementScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 16)),
           // Contact Options
           Row(
             children: [
@@ -417,7 +437,7 @@ class _BookingManagementScreenState extends State<BookingManagementScreen> {
                   },
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 8)),
               Expanded(
                 child: _buildContactOption(
                   Icons.chat,
@@ -428,7 +448,7 @@ class _BookingManagementScreenState extends State<BookingManagementScreen> {
                   },
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 8)),
               Expanded(
                 child: _buildContactOption(
                   Icons.videocam,
@@ -455,7 +475,9 @@ class _BookingManagementScreenState extends State<BookingManagementScreen> {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: EdgeInsets.symmetric(
+          vertical: ResponsiveHelper.responsiveSpacing(context, 12),
+        ),
         decoration: BoxDecoration(
           color: isSelected
               ? const Color(0xFF9370DB).withOpacity(0.1)
@@ -475,13 +497,13 @@ class _BookingManagementScreenState extends State<BookingManagementScreen> {
               color: isSelected
                   ? const Color(0xFF9370DB)
                   : Colors.grey[600],
-              size: 24,
+              size: ResponsiveHelper.isMobile(context) ? 24.0 : ResponsiveHelper.isTablet(context) ? 28.0 : 32.0,
             ),
-            const SizedBox(height: 4),
+            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 4)),
             Text(
               label,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 12),
                 fontWeight: isSelected
                     ? FontWeight.w600
                     : FontWeight.normal,
@@ -503,7 +525,9 @@ class _BookingManagementScreenState extends State<BookingManagementScreen> {
     final daysInMonth = lastDayOfMonth.day;
 
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: EdgeInsets.all(
+        ResponsiveHelper.responsiveSpacing(context, 8),
+      ),
       decoration: BoxDecoration(
         color: Colors.grey[50],
         borderRadius: BorderRadius.circular(12),
@@ -514,30 +538,35 @@ class _BookingManagementScreenState extends State<BookingManagementScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: ['S', 'M', 'T', 'W', 'T', 'F', 'S']
-                .map((day) => SizedBox(
-                      width: 40,
-                      child: Center(
-                        child: Text(
-                          day,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey[600],
-                          ),
+                .map((day) {
+                  final daySize = ResponsiveHelper.isMobile(context) ? 40.0 : ResponsiveHelper.isTablet(context) ? 48.0 : 56.0;
+                  return SizedBox(
+                    width: daySize,
+                    child: Center(
+                      child: Text(
+                        day,
+                        style: TextStyle(
+                          fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 12),
+                          fontWeight: FontWeight.w600,
+                          color: Colors.grey[600],
                         ),
                       ),
-                    ))
+                    ),
+                  );
+                })
                 .toList(),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 8)),
           // Calendar days
           ...List.generate(6, (weekIndex) {
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: List.generate(7, (dayIndex) {
                 final dayNumber = weekIndex * 7 + dayIndex - firstWeekday + 1;
+                final daySize = ResponsiveHelper.isMobile(context) ? 40.0 : ResponsiveHelper.isTablet(context) ? 48.0 : 56.0;
+                
                 if (dayNumber < 1 || dayNumber > daysInMonth) {
-                  return const SizedBox(width: 40, height: 40);
+                  return SizedBox(width: daySize, height: daySize);
                 }
 
                 final dayDate = DateTime(
@@ -556,8 +585,8 @@ class _BookingManagementScreenState extends State<BookingManagementScreen> {
                     });
                   },
                   child: Container(
-                    width: 40,
-                    height: 40,
+                    width: daySize,
+                    height: daySize,
                     decoration: BoxDecoration(
                       color: isSelected
                           ? const Color(0xFF9370DB)
@@ -568,7 +597,7 @@ class _BookingManagementScreenState extends State<BookingManagementScreen> {
                       child: Text(
                         '$dayNumber',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                           fontWeight: isSelected
                               ? FontWeight.bold
                               : FontWeight.normal,

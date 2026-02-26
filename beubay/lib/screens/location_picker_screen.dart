@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:beubay/services/api_client.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 class LocationPickerScreen extends StatefulWidget {
   final String currentLocation;
@@ -62,11 +63,11 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
           icon: const Icon(Icons.arrow_back, color: Color(0xFF1A1A1A)),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Select Location',
           style: TextStyle(
-            color: Color(0xFF1A1A1A),
-            fontSize: 18,
+            color: const Color(0xFF1A1A1A),
+            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 18),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -75,7 +76,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
         children: [
           // Search bar
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: ResponsiveHelper.responsivePadding(context),
             child: TextField(
               onChanged: (value) {
                 setState(() {
@@ -84,7 +85,11 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
               },
               decoration: InputDecoration(
                 hintText: 'Search location...',
-                prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                  size: ResponsiveHelper.responsiveFontSize(context, mobile: 24),
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(color: Colors.grey[300]!),
@@ -106,10 +111,13 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _filteredLocations.isEmpty
-                    ? const Center(
+                    ? Center(
                         child: Text(
                           'No locations found',
-                          style: TextStyle(color: Colors.grey),
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
+                          ),
                         ),
                       )
                     : ListView.builder(
@@ -121,9 +129,10 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                           final isSelected = locationName == widget.currentLocation;
 
                           return ListTile(
-                            leading: const Icon(
+                            leading: Icon(
                               Icons.location_on,
-                              color: Color(0xFF9370DB),
+                              color: const Color(0xFF9370DB),
+                              size: ResponsiveHelper.responsiveFontSize(context, mobile: 24),
                             ),
                             title: Text(
                               location['name'] ?? locationName,
@@ -134,13 +143,20 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                                 color: isSelected
                                     ? const Color(0xFF9370DB)
                                     : const Color(0xFF1A1A1A),
+                                fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                               ),
                             ),
-                            subtitle: Text(locationName),
+                            subtitle: Text(
+                              locationName,
+                              style: TextStyle(
+                                fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
+                              ),
+                            ),
                             trailing: isSelected
-                                ? const Icon(
+                                ? Icon(
                                     Icons.check,
-                                    color: Color(0xFF9370DB),
+                                    color: const Color(0xFF9370DB),
+                                    size: ResponsiveHelper.responsiveFontSize(context, mobile: 24),
                                   )
                                 : null,
                             onTap: () {

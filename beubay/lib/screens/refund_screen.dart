@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 class RefundScreen extends StatefulWidget {
   const RefundScreen({super.key});
@@ -86,11 +87,11 @@ class _RefundScreenState extends State<RefundScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Your Refund',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 20),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -102,10 +103,10 @@ class _RefundScreenState extends State<RefundScreen> {
           children: [
             // Total Refunded Section
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: ResponsiveHelper.responsivePadding(context),
               child: Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(20),
+                padding: ResponsiveHelper.responsivePadding(context),
                 decoration: BoxDecoration(
                   color: const Color(0xFF9370DB).withOpacity(0.15),
                   borderRadius: BorderRadius.circular(12),
@@ -113,19 +114,19 @@ class _RefundScreenState extends State<RefundScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Total Refunded',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                         color: Colors.black87,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 8)),
                     Text(
                       '\$ ${_totalRefunded.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                        fontSize: 32,
+                      style: TextStyle(
+                        fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 32),
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
@@ -137,23 +138,28 @@ class _RefundScreenState extends State<RefundScreen> {
             // Refund Details Section
             ..._groupedRefunds.entries.map((entry) {
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: EdgeInsets.symmetric(
+                  horizontal: ResponsiveHelper.responsiveSpacing(context, 16),
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(bottom: 12, top: 8),
+                      padding: EdgeInsets.only(
+                        bottom: ResponsiveHelper.responsiveSpacing(context, 12),
+                        top: ResponsiveHelper.responsiveSpacing(context, 8),
+                      ),
                       child: Text(
                         entry.key,
-                        style: const TextStyle(
-                          fontSize: 18,
+                        style: TextStyle(
+                          fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 18),
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                         ),
                       ),
                     ),
                     ...entry.value.map((refund) => _buildRefundItem(refund)),
-                    const SizedBox(height: 16),
+                    SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 16)),
                   ],
                 ),
               );
@@ -166,8 +172,12 @@ class _RefundScreenState extends State<RefundScreen> {
 
   Widget _buildRefundItem(RefundItem refund) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
+      margin: EdgeInsets.only(
+        bottom: ResponsiveHelper.responsiveSpacing(context, 12),
+      ),
+      padding: EdgeInsets.all(
+        ResponsiveHelper.responsiveSpacing(context, 12),
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -176,9 +186,12 @@ class _RefundScreenState extends State<RefundScreen> {
       child: Row(
         children: [
           // Product Image Placeholder
-          Container(
-            width: 80,
-            height: 80,
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final imageSize = ResponsiveHelper.isMobile(context) ? 80.0 : ResponsiveHelper.isTablet(context) ? 100.0 : 120.0;
+              return Container(
+                width: imageSize,
+                height: imageSize,
             decoration: BoxDecoration(
               color: Colors.grey[300],
               borderRadius: BorderRadius.circular(8),
@@ -207,8 +220,10 @@ class _RefundScreenState extends State<RefundScreen> {
                       size: 32,
                     ),
                   ),
+              );
+            },
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 12)),
           // Product Details
           Expanded(
             child: Column(
@@ -216,21 +231,21 @@ class _RefundScreenState extends State<RefundScreen> {
               children: [
                 Text(
                   refund.productName,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                     fontWeight: FontWeight.w600,
                     color: Colors.black,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 4)),
                 Text(
                   'Order #${refund.orderNumber} - ${DateFormat('MMM d').format(refund.date)}',
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                     color: Colors.grey[600],
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 8)),
                 // Status Badge
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -244,7 +259,7 @@ class _RefundScreenState extends State<RefundScreen> {
                   child: Text(
                     _getStatusText(refund.status),
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 12),
                       fontWeight: FontWeight.w500,
                       color: _getStatusColor(refund.status),
                     ),
@@ -256,8 +271,8 @@ class _RefundScreenState extends State<RefundScreen> {
           // Refund Amount
           Text(
             '\$${refund.amount.toStringAsFixed(2)}',
-            style: const TextStyle(
-              fontSize: 16,
+            style: TextStyle(
+              fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),

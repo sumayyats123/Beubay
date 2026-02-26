@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 class WishlistScreen extends StatefulWidget {
   const WishlistScreen({super.key});
@@ -56,11 +57,11 @@ class _WishlistScreenState extends State<WishlistScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Your Wishlist',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 20),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -72,14 +73,14 @@ class _WishlistScreenState extends State<WishlistScreen> {
           children: [
             // Wishlist Header
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: ResponsiveHelper.responsivePadding(context),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'Fashion Wishlist',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 20),
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
@@ -87,7 +88,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
                   Text(
                     '${_wishlistItems.length} items',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                       color: Colors.grey[600],
                       fontWeight: FontWeight.w500,
                     ),
@@ -97,7 +98,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
             ),
             // Wishlist Items
             ..._wishlistItems.map((item) => _buildWishlistCard(item)),
-            const SizedBox(height: 16),
+            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 16)),
           ],
         ),
       ),
@@ -106,8 +107,11 @@ class _WishlistScreenState extends State<WishlistScreen> {
 
   Widget _buildWishlistCard(WishlistItem item) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.symmetric(
+        horizontal: ResponsiveHelper.responsiveSpacing(context, 16),
+        vertical: ResponsiveHelper.responsiveSpacing(context, 8),
+      ),
+      padding: ResponsiveHelper.responsivePadding(context),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -152,23 +156,23 @@ class _WishlistScreenState extends State<WishlistScreen> {
                 // Product Name
                 Text(
                   item.productName,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
                 ),
-                const SizedBox(height: 4),
+                SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 4)),
                 // Price
                 Text(
                   '\$${item.price.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 8)),
                 // Rating
                 Row(
                   children: [
@@ -180,29 +184,29 @@ class _WishlistScreenState extends State<WishlistScreen> {
                     const SizedBox(width: 4),
                     Text(
                       item.rating.toString(),
-                      style: const TextStyle(
-                        fontSize: 14,
+                      style: TextStyle(
+                        fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 8)),
                 // Size Info
                 Text(
                   '${item.category} - size ${item.size}',
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 12),
                     color: Colors.grey[600],
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 8)),
                 // Stock Status
                 Text(
                   _getStockStatusText(item.stockStatus),
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 12),
                     fontWeight: FontWeight.w500,
                     color: _getStockStatusColor(item.stockStatus),
                   ),
@@ -210,16 +214,19 @@ class _WishlistScreenState extends State<WishlistScreen> {
               ],
             ),
           ),
-          const SizedBox(width: 12),
+          SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 12)),
           // Right side - Product Image
           Column(
             children: [
               Stack(
                 children: [
                   // Product Image
-                  Container(
-                    width: 100,
-                    height: 100,
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      final imageSize = ResponsiveHelper.isMobile(context) ? 100.0 : ResponsiveHelper.isTablet(context) ? 120.0 : 140.0;
+                      return Container(
+                        width: imageSize,
+                        height: imageSize,
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(8),
@@ -246,8 +253,10 @@ class _WishlistScreenState extends State<WishlistScreen> {
                               Icons.inventory_2_outlined,
                               color: Colors.grey,
                               size: 32,
-                            ),
                           ),
+                        ),
+                      );
+                    },
                   ),
                   // Delete Icon
                   Positioned(
@@ -255,52 +264,62 @@ class _WishlistScreenState extends State<WishlistScreen> {
                     right: 4,
                     child: GestureDetector(
                       onTap: () => _removeFromWishlist(item.id),
-                      child: Container(
-                        width: 24,
-                        height: 24,
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          final iconSize = ResponsiveHelper.isMobile(context) ? 24.0 : 28.0;
+                          return Container(
+                            width: iconSize,
+                            height: iconSize,
                         decoration: const BoxDecoration(
                           color: Colors.grey,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(
-                          Icons.delete_outline,
-                          color: Colors.white,
-                          size: 16,
-                        ),
+                            child: Icon(
+                              Icons.delete_outline,
+                              color: Colors.white,
+                              size: iconSize * 0.67,
+                            ),
+                          );
+                        },
                       ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 8)),
               // Action Button
-              SizedBox(
-                width: 100,
-                child: ElevatedButton(
-                  onPressed: item.stockStatus == StockStatus.outOfStock
-                      ? () => _handleNotify(item)
-                      : () => _handleAddToCart(item),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: item.stockStatus == StockStatus.outOfStock
-                        ? Colors.grey[400]
-                        : Colors.blue,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final buttonWidth = ResponsiveHelper.isMobile(context) ? 100.0 : ResponsiveHelper.isTablet(context) ? 120.0 : 140.0;
+                  return SizedBox(
+                    width: buttonWidth,
+                    child: ElevatedButton(
+                      onPressed: item.stockStatus == StockStatus.outOfStock
+                          ? () => _handleNotify(item)
+                          : () => _handleAddToCart(item),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: item.stockStatus == StockStatus.outOfStock
+                            ? Colors.grey[400]
+                            : Colors.blue,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text(
+                        item.stockStatus == StockStatus.outOfStock
+                            ? 'Notify'
+                            : 'Add',
+                        style: TextStyle(
+                          fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    item.stockStatus == StockStatus.outOfStock
-                        ? 'Notify'
-                        : 'Add',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+                  );
+                },
               ),
             ],
           ),

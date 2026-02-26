@@ -40,36 +40,49 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         curve: Curves.easeInOut,
       );
     } else {
-      // Navigate to verify screen (OTP screen)
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const VerifyScreen()),
-      );
+      // Navigate to verify screen (OTP screen) after current frame completes
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const VerifyScreen()),
+          );
+        }
+      });
     }
   }
 
   void _skipOnboarding() {
-    // Navigate to verify screen (OTP screen)
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const VerifyScreen()),
-    );
+    // Navigate to verify screen (OTP screen) after current frame completes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const VerifyScreen()),
+        );
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    // Pre-calculate responsive values outside LayoutBuilder to avoid layout conflicts
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    final isTablet = screenWidth >= 600 && screenWidth < 1024;
+    final topSpacing = isMobile ? 20.0 : isTablet ? 24.0 : 28.0;
+    final buttonSpacing = isMobile ? 20.0 : isTablet ? 24.0 : 28.0;
+    final bottomSpacing = isMobile ? 30.0 : isTablet ? 36.0 : 42.0;
+    
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 20),
-
+            SizedBox(height: topSpacing),
             // Beubay Logo with gradient
-            _buildBeubayLogo(),
-
-            const SizedBox(height: 20),
-
+            _buildBeubayLogo(isMobile, isTablet),
+            SizedBox(height: topSpacing),
             // PageView for welcome screens
             Expanded(
               child: PageView.builder(
@@ -77,27 +90,24 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 onPageChanged: _onPageChanged,
                 itemCount: _welcomeImages.length,
                 itemBuilder: (context, index) {
-                  return _buildWelcomePage(index);
+                  return _buildWelcomePage(index, isMobile, isTablet);
                 },
               ),
             ),
-
             // Page indicator
             _buildPageIndicator(),
-
-            const SizedBox(height: 20),
-
+            SizedBox(height: buttonSpacing),
             // Navigation buttons
-            _buildNavigationButtons(),
-
-            const SizedBox(height: 30),
+            _buildNavigationButtons(isMobile, isTablet),
+            SizedBox(height: bottomSpacing),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildBeubayLogo() {
+  Widget _buildBeubayLogo(bool isMobile, bool isTablet) {
+    final fontSize = isMobile ? 32.0 : isTablet ? 36.0 : 40.0;
     return ShaderMask(
       shaderCallback: (bounds) => const LinearGradient(
         colors: [
@@ -107,10 +117,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       ).createShader(bounds),
-      child: const Text(
+      child: Text(
         'Beubay',
         style: TextStyle(
-          fontSize: 32,
+          fontSize: fontSize,
           fontWeight: FontWeight.bold,
           color: Colors.white,
           letterSpacing: 1.5,
@@ -119,13 +129,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  Widget _buildWelcomePage(int index) {
+  Widget _buildWelcomePage(int index, bool isMobile, bool isTablet) {
+    final horizontalPadding = isMobile ? 20.0 : isTablet ? 24.0 : 28.0;
+    final topSpacing = isMobile ? 20.0 : isTablet ? 24.0 : 28.0;
+    final middleSpacing = isMobile ? 30.0 : isTablet ? 36.0 : 42.0;
+    final bottomSpacing = isMobile ? 15.0 : isTablet ? 18.0 : 21.0;
+    final titleFontSize = isMobile ? 28.0 : isTablet ? 32.0 : 36.0;
+    final descFontSize = isMobile ? 14.0 : isTablet ? 16.0 : 18.0;
+    final iconSize = isMobile ? 50.0 : isTablet ? 60.0 : 70.0;
+    
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
       child: Column(
         children: [
-          const SizedBox(height: 20),
-
+          SizedBox(height: topSpacing),
           // Illustration area with water wave background
           Expanded(
             flex: 3,
@@ -145,10 +162,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         color: Colors.grey[200],
-                        child: const Center(
+                        child: Center(
                           child: Icon(
                             Icons.image_not_supported,
-                            size: 50,
+                            size: iconSize,
                             color: Colors.grey,
                           ),
                         ),
@@ -159,29 +176,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ],
             ),
           ),
-
-          const SizedBox(height: 30),
-
+          SizedBox(height: middleSpacing),
           // Welcome text
-          const Text(
+          Text(
             'Welcome to Beubay',
             style: TextStyle(
-              fontSize: 28,
+              fontSize: titleFontSize,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1A1A1A),
+              color: const Color(0xFF1A1A1A),
             ),
           ),
-
-          const SizedBox(height: 15),
-
+          SizedBox(height: bottomSpacing),
           // Description text
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
             child: Text(
               'Invest in your skin. It\'s going to represent you for a long time.Invest in your skin. It\'s going to represent you for a long time',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 14,
+                fontSize: descFontSize,
                 color: Colors.grey[600],
                 height: 1.5,
               ),
@@ -206,11 +219,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-  Widget _buildNavigationButtons() {
+  Widget _buildNavigationButtons(bool isMobile, bool isTablet) {
     final isLastPage = _currentPage == _welcomeImages.length - 1;
+    final horizontalPadding = isMobile ? 20.0 : isTablet ? 24.0 : 28.0;
+    final buttonFontSize = isMobile ? 16.0 : isTablet ? 18.0 : 20.0;
+    final buttonHorizontalPadding = isMobile ? 32.0 : isTablet ? 40.0 : 48.0;
+    final buttonVerticalPadding = isMobile ? 14.0 : isTablet ? 16.0 : 18.0;
+    final btnSize = isMobile ? 60.0 : isTablet ? 70.0 : 80.0;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -220,13 +238,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             child: Text(
               'Skip',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: buttonFontSize,
                 color: Colors.grey[600],
                 fontWeight: FontWeight.w500,
               ),
             ),
           ),
-
           // Next/Get Start button
           isLastPage
               ? ElevatedButton(
@@ -234,25 +251,28 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF9370DB),
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 32,
-                      vertical: 14,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: buttonHorizontalPadding,
+                      vertical: buttonVerticalPadding,
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
                     elevation: 4,
                   ),
-                  child: const Text(
+                  child: Text(
                     'Get Start',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                      fontSize: buttonFontSize,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 )
               : GestureDetector(
                   onTap: _nextPage,
                   child: Container(
-                    width: 60,
-                    height: 60,
+                    width: btnSize,
+                    height: btnSize,
                     decoration: BoxDecoration(
                       color: const Color(0xFF9370DB),
                       shape: BoxShape.circle,
@@ -265,10 +285,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         ),
                       ],
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.arrow_forward,
                       color: Colors.white,
-                      size: 28,
+                      size: btnSize * 0.47,
                     ),
                   ),
                 ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:beubay/screens/booking_management_screen.dart';
 import 'package:beubay/models/booking_models.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 class StylistSelectionScreen extends StatefulWidget {
   final List<String> selectedServices;
@@ -63,11 +64,11 @@ class _StylistSelectionScreenState extends State<StylistSelectionScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Stylists',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 20),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -77,13 +78,13 @@ class _StylistSelectionScreenState extends State<StylistSelectionScreen> {
         children: [
           // Question
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: ResponsiveHelper.responsivePadding(context),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
                 'Who would you like to book with?',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                   fontWeight: FontWeight.w500,
                   color: Colors.grey[800],
                 ),
@@ -93,7 +94,9 @@ class _StylistSelectionScreenState extends State<StylistSelectionScreen> {
           // Stylist Options
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(
+                horizontal: ResponsiveHelper.responsiveSpacing(context, 16),
+              ),
               itemCount: _stylistOptions.length,
               itemBuilder: (context, index) {
                 final stylist = _stylistOptions[index];
@@ -103,7 +106,7 @@ class _StylistSelectionScreenState extends State<StylistSelectionScreen> {
           ),
           // Footer Buttons
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: ResponsiveHelper.responsivePadding(context),
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
@@ -120,17 +123,17 @@ class _StylistSelectionScreenState extends State<StylistSelectionScreen> {
                 Expanded(
                   child: TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text(
+                    child: Text(
                       'Cancel',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                         fontWeight: FontWeight.w600,
                         color: Colors.red,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 12)),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: _selectedStylistId != null
@@ -151,16 +154,18 @@ class _StylistSelectionScreenState extends State<StylistSelectionScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF9370DB),
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      padding: EdgeInsets.symmetric(
+                        vertical: ResponsiveHelper.responsiveSpacing(context, 14),
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                       elevation: 0,
                     ),
-                    child: const Text(
+                    child: Text(
                       'Continue',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -178,8 +183,10 @@ class _StylistSelectionScreenState extends State<StylistSelectionScreen> {
     final isSelected = _selectedStylistId == stylist.id;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
+      margin: EdgeInsets.only(
+        bottom: ResponsiveHelper.responsiveSpacing(context, 12),
+      ),
+      padding: ResponsiveHelper.responsivePadding(context),
       decoration: BoxDecoration(
         color: isSelected
             ? const Color(0xFF9370DB).withOpacity(0.1)
@@ -201,30 +208,35 @@ class _StylistSelectionScreenState extends State<StylistSelectionScreen> {
         child: Row(
           children: [
             // Radio Button
-            Container(
-              width: 24,
-              height: 24,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: isSelected
-                      ? const Color(0xFF9370DB)
-                      : Colors.grey[400]!,
-                  width: 2,
-                ),
-                color: isSelected
-                    ? const Color(0xFF9370DB)
-                    : Colors.transparent,
-              ),
-              child: isSelected
-                  ? const Icon(
-                      Icons.check,
-                      size: 16,
-                      color: Colors.white,
-                    )
-                  : null,
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final radioSize = ResponsiveHelper.isMobile(context) ? 24.0 : ResponsiveHelper.isTablet(context) ? 28.0 : 32.0;
+                return Container(
+                  width: radioSize,
+                  height: radioSize,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isSelected
+                          ? const Color(0xFF9370DB)
+                          : Colors.grey[400]!,
+                      width: 2,
+                    ),
+                    color: isSelected
+                        ? const Color(0xFF9370DB)
+                        : Colors.transparent,
+                  ),
+                  child: isSelected
+                      ? Icon(
+                          Icons.check,
+                          size: radioSize * 0.67,
+                          color: Colors.white,
+                        )
+                      : null,
+                );
+              },
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 16)),
             // Stylist Info
             Expanded(
               child: Column(
@@ -232,35 +244,35 @@ class _StylistSelectionScreenState extends State<StylistSelectionScreen> {
                 children: [
                   Text(
                     stylist.name,
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: TextStyle(
+                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                   ),
                   if (stylist.title != null) ...[
-                    const SizedBox(height: 4),
+                    SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 4)),
                     Row(
                       children: [
                         Text(
                           stylist.title!,
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                             color: Colors.grey[700],
                           ),
                         ),
                         if (stylist.rating != null) ...[
-                          const SizedBox(width: 8),
-                          const Icon(
+                          SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 8)),
+                          Icon(
                             Icons.star,
-                            size: 14,
+                            size: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                             color: Colors.amber,
                           ),
-                          const SizedBox(width: 4),
+                          SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 4)),
                           Text(
                             '${stylist.rating} rating',
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 12),
                               color: Colors.grey[600],
                             ),
                           ),
@@ -269,11 +281,11 @@ class _StylistSelectionScreenState extends State<StylistSelectionScreen> {
                     ),
                   ],
                   if (stylist.availability != null) ...[
-                    const SizedBox(height: 4),
+                    SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 4)),
                     Text(
                       'Available ${stylist.availability}',
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 12),
                         color: Colors.grey[600],
                       ),
                     ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:beubay/services/api_client.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 class AppointmentsScreen extends StatefulWidget {
   const AppointmentsScreen({super.key});
@@ -42,11 +43,11 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
           icon: const Icon(Icons.arrow_back, color: Color(0xFF1A1A1A)),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'My Appointments',
           style: TextStyle(
-            color: Color(0xFF1A1A1A),
-            fontSize: 18,
+            color: const Color(0xFF1A1A1A),
+            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 18),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -54,35 +55,37 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _appointments.isEmpty
-              ? const Center(
+              ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
                         Icons.calendar_today,
-                        size: 64,
+                        size: ResponsiveHelper.isMobile(context) ? 64.0 : ResponsiveHelper.isTablet(context) ? 80.0 : 96.0,
                         color: Colors.grey,
                       ),
-                      SizedBox(height: 16),
+                      SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 16)),
                       Text(
                         'No appointments found',
                         style: TextStyle(
                           color: Colors.grey,
-                          fontSize: 16,
+                          fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                         ),
                       ),
                     ],
                   ),
                 )
               : ListView.builder(
-                  padding: const EdgeInsets.all(16),
+                  padding: ResponsiveHelper.responsivePadding(context),
                   itemCount: _appointments.length,
                   itemBuilder: (context, index) {
                     final appointment = _appointments[index];
                     return Card(
-                      margin: const EdgeInsets.only(bottom: 12),
+                      margin: EdgeInsets.only(
+                        bottom: ResponsiveHelper.responsiveSpacing(context, 12),
+                      ),
                       child: Padding(
-                        padding: const EdgeInsets.all(16),
+                        padding: ResponsiveHelper.responsivePadding(context),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -91,17 +94,17 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                 Expanded(
                                   child: Text(
                                     appointment['serviceName'] ?? 'Service',
-                                    style: const TextStyle(
-                                      fontSize: 18,
+                                    style: TextStyle(
+                                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 18),
                                       fontWeight: FontWeight.bold,
-                                      color: Color(0xFF1A1A1A),
+                                      color: const Color(0xFF1A1A1A),
                                     ),
                                   ),
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 6,
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: ResponsiveHelper.responsiveSpacing(context, 12),
+                                    vertical: ResponsiveHelper.responsiveSpacing(context, 6),
                                   ),
                                   decoration: BoxDecoration(
                                     color: _getStatusColor(
@@ -111,42 +114,63 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                                   ),
                                   child: Text(
                                     appointment['status'] ?? 'Pending',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 12,
+                                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 12),
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 12),
+                            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 12)),
                             Row(
                               children: [
-                                const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
-                                const SizedBox(width: 8),
+                                Icon(
+                                  Icons.calendar_today,
+                                  size: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 8)),
                                 Text(
                                   appointment['date'] ?? 'N/A',
-                                  style: TextStyle(color: Colors.grey[700]),
+                                  style: TextStyle(
+                                    color: Colors.grey[700],
+                                    fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
+                                  ),
                                 ),
-                                const SizedBox(width: 16),
-                                const Icon(Icons.access_time, size: 16, color: Colors.grey),
-                                const SizedBox(width: 8),
+                                SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 16)),
+                                Icon(
+                                  Icons.access_time,
+                                  size: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 8)),
                                 Text(
                                   appointment['time'] ?? 'N/A',
-                                  style: TextStyle(color: Colors.grey[700]),
+                                  style: TextStyle(
+                                    color: Colors.grey[700],
+                                    fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
+                                  ),
                                 ),
                               ],
                             ),
-                            const SizedBox(height: 8),
+                            SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 8)),
                             Row(
                               children: [
-                                const Icon(Icons.location_on, size: 16, color: Colors.grey),
-                                const SizedBox(width: 8),
+                                Icon(
+                                  Icons.location_on,
+                                  size: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
+                                  color: Colors.grey,
+                                ),
+                                SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 8)),
                                 Expanded(
                                   child: Text(
                                     appointment['location'] ?? 'N/A',
-                                    style: TextStyle(color: Colors.grey[700]),
+                                    style: TextStyle(
+                                      color: Colors.grey[700],
+                                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
+                                    ),
                                   ),
                                 ),
                               ],

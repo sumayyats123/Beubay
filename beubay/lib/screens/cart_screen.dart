@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -121,11 +122,11 @@ class _CartScreenState extends State<CartScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'My Cart',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 20),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -133,13 +134,15 @@ class _CartScreenState extends State<CartScreen> {
         actions: [
           if (_cartItems.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.only(right: 16),
+              padding: EdgeInsets.only(
+                right: ResponsiveHelper.responsiveSpacing(context, 16),
+              ),
               child: Center(
                 child: Text(
                   '${_cartItems.length} items',
                   style: TextStyle(
                     color: Colors.grey[600],
-                    fontSize: 14,
+                    fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
                     fontWeight: FontWeight.normal,
                   ),
                 ),
@@ -160,22 +163,25 @@ class _CartScreenState extends State<CartScreen> {
                 children: [
                   Icon(
                     Icons.shopping_cart_outlined,
-                    size: 80,
+                    size: ResponsiveHelper.isMobile(context) ? 80.0 : ResponsiveHelper.isTablet(context) ? 100.0 : 120.0,
                     color: Colors.grey[300],
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 20)),
                   Text(
                     'Your cart is empty',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 18),
                       color: Colors.grey[600],
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 10)),
                   Text(
                     'Add items to your cart to see them here',
-                    style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+                    style: TextStyle(
+                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
+                      color: Colors.grey[500],
+                    ),
                   ),
                 ],
               ),
@@ -184,9 +190,9 @@ class _CartScreenState extends State<CartScreen> {
               children: [
                 Expanded(
                   child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 16,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: ResponsiveHelper.responsiveSpacing(context, 20),
+                      vertical: ResponsiveHelper.responsiveSpacing(context, 16),
                     ),
                     itemCount: _cartItems.length,
                     itemBuilder: (context, index) {
@@ -198,39 +204,41 @@ class _CartScreenState extends State<CartScreen> {
                 Container(
                   height: 1,
                   color: const Color(0xFF9370DB),
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  margin: EdgeInsets.symmetric(
+                    horizontal: ResponsiveHelper.responsiveSpacing(context, 20),
+                  ),
                 ),
                 // Total and Checkout Section
                 Container(
-                  padding: const EdgeInsets.all(20),
+                  padding: ResponsiveHelper.responsivePadding(context),
                   decoration: BoxDecoration(color: Colors.white),
                   child: Column(
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          Text(
                             'Total amount',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                               fontWeight: FontWeight.normal,
                               color: Colors.black,
                             ),
                           ),
                           Text(
                             _formatPrice(_calculateTotal()),
-                            style: const TextStyle(
-                              fontSize: 20,
+                            style: TextStyle(
+                              fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 20),
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 20)),
                       SizedBox(
                         width: double.infinity,
-                        height: 50,
+                        height: ResponsiveHelper.isMobile(context) ? 50.0 : ResponsiveHelper.isTablet(context) ? 56.0 : 60.0,
                         child: ElevatedButton(
                           onPressed: () {
                             // TODO: Navigate to checkout
@@ -249,11 +257,11 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                             elevation: 0,
                           ),
-                          child: const Text(
+                          child: Text(
                             'Checkout',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 16,
+                              fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -285,25 +293,36 @@ class _CartScreenState extends State<CartScreen> {
       direction: DismissDirection.endToStart,
       background: Container(
         alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 20),
+        padding: EdgeInsets.only(
+          right: ResponsiveHelper.responsiveSpacing(context, 20),
+        ),
         decoration: BoxDecoration(
           color: const Color(0xFF9370DB),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Icon(Icons.delete, color: Colors.white, size: 28),
+        child: Icon(
+          Icons.delete,
+          color: Colors.white,
+          size: ResponsiveHelper.responsiveFontSize(context, mobile: 28),
+        ),
       ),
       onDismissed: (direction) {
         _removeItem(index);
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
+        margin: EdgeInsets.only(
+          bottom: ResponsiveHelper.responsiveSpacing(context, 16),
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Product Image
-            Container(
-              width: 80,
-              height: 80,
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final imageSize = ResponsiveHelper.isMobile(context) ? 80.0 : ResponsiveHelper.isTablet(context) ? 100.0 : 120.0;
+                return Container(
+                  width: imageSize,
+                  height: imageSize,
               decoration: BoxDecoration(
                 color: Colors.grey[200],
                 borderRadius: BorderRadius.circular(8),
@@ -315,21 +334,23 @@ class _CartScreenState extends State<CartScreen> {
                         imageUrl.toString(),
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
-                          return const Icon(
+                          return Icon(
                             Icons.inventory_2_outlined,
                             color: Colors.grey,
-                            size: 30,
+                            size: imageSize * 0.375,
                           );
                         },
                       ),
                     )
-                  : const Icon(
+                  : Icon(
                       Icons.inventory_2_outlined,
                       color: Colors.grey,
-                      size: 30,
+                      size: imageSize * 0.375,
                     ),
+                );
+              },
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 12)),
             // Product Details
             Expanded(
               child: Column(
@@ -337,8 +358,8 @@ class _CartScreenState extends State<CartScreen> {
                 children: [
                   Text(
                     name,
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: TextStyle(
+                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     ),
@@ -346,10 +367,13 @@ class _CartScreenState extends State<CartScreen> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   if (brand.isNotEmpty) ...[
-                    const SizedBox(height: 4),
+                    SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 4)),
                     Text(
                       brand,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                      style: TextStyle(
+                        fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 14),
+                        color: Colors.grey[600],
+                      ),
                     ),
                   ],
                 ],
@@ -360,26 +384,33 @@ class _CartScreenState extends State<CartScreen> {
               children: [
                 GestureDetector(
                   onTap: () => _updateQuantity(index, quantity - 1),
-                  child: Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const Icon(
-                      Icons.remove,
-                      size: 18,
-                      color: Colors.black,
-                    ),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final btnSize = ResponsiveHelper.isMobile(context) ? 32.0 : 36.0;
+                      return Container(
+                        width: btnSize,
+                        height: btnSize,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey[300]!),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Icon(
+                          Icons.remove,
+                          size: btnSize * 0.56,
+                          color: Colors.black,
+                        ),
+                      );
+                    },
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: ResponsiveHelper.responsiveSpacing(context, 12),
+                  ),
                   child: Text(
                     '$quantity',
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: TextStyle(
+                      fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                       fontWeight: FontWeight.w500,
                       color: Colors.black,
                     ),
@@ -387,40 +418,58 @@ class _CartScreenState extends State<CartScreen> {
                 ),
                 GestureDetector(
                   onTap: () => _updateQuantity(index, quantity + 1),
-                  child: Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: const Icon(Icons.add, size: 18, color: Colors.black),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      final btnSize = ResponsiveHelper.isMobile(context) ? 32.0 : 36.0;
+                      return Container(
+                        width: btnSize,
+                        height: btnSize,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey[300]!),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Icon(
+                          Icons.add,
+                          size: btnSize * 0.56,
+                          color: Colors.black,
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 12)),
             // Price
             Text(
               _formatPrice(priceNum),
-              style: const TextStyle(
-                fontSize: 16,
+              style: TextStyle(
+                fontSize: ResponsiveHelper.responsiveFontSize(context, mobile: 16),
                 fontWeight: FontWeight.w600,
                 color: Colors.black,
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: ResponsiveHelper.responsiveSpacing(context, 12)),
             // Delete Button
             GestureDetector(
               onTap: () => _removeItem(index),
-              child: Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF9370DB),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Icon(Icons.delete, color: Colors.white, size: 24),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final btnSize = ResponsiveHelper.isMobile(context) ? 48.0 : ResponsiveHelper.isTablet(context) ? 56.0 : 64.0;
+                  return Container(
+                    width: btnSize,
+                    height: btnSize,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF9370DB),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      Icons.delete,
+                      color: Colors.white,
+                      size: btnSize * 0.5,
+                    ),
+                  );
+                },
               ),
             ),
           ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:beubay/screens/service_selection_screen.dart';
+import 'package:beubay/utils/responsive_helper.dart';
 
 class ServiceDetailScreen extends StatefulWidget {
   final Map<String, dynamic> service;
@@ -143,9 +144,14 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                   slivers: [
                     // Image Carousel Section
                     SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 300,
-                        child: _buildImageCarousel(),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          final carouselHeight = ResponsiveHelper.isMobile(context) ? 300.0 : ResponsiveHelper.isTablet(context) ? 400.0 : 500.0;
+                          return SizedBox(
+                            height: carouselHeight,
+                            child: _buildImageCarousel(),
+                          );
+                        },
                       ),
                     ),
 
@@ -157,27 +163,27 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                           // Service Name and Info
                           _buildServiceInfo(),
 
-                          const SizedBox(height: 20),
+                          SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 20)),
 
                           // About Section
                           _buildAboutSection(),
 
-                          const SizedBox(height: 20),
+                          SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 20)),
 
                           // Services Section
                           _buildServicesSection(),
 
-                          const SizedBox(height: 20),
+                          SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 20)),
 
                           // Stylists/Doctors Section
                           _buildStylistsSection(),
 
-                          const SizedBox(height: 20),
+                          SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 20)),
 
                           // Reviews Section
                           _buildReviewsSection(),
 
-                          const SizedBox(height: 100), // Space for bottom button
+                          SizedBox(height: ResponsiveHelper.responsiveSpacing(context, 100)), // Space for bottom button
                         ],
                       ),
                     ),
