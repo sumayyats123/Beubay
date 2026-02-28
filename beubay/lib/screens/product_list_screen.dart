@@ -476,6 +476,16 @@ class _ProductListScreenState extends State<ProductListScreen> {
       }
     }
 
+// Ensure values are inside range
+tempMinPrice = tempMinPrice.clamp(calculatedMinPrice, calculatedMaxPrice);
+tempMaxPrice = tempMaxPrice.clamp(calculatedMinPrice, calculatedMaxPrice);
+
+// VERY IMPORTANT: start must be <= end
+if (tempMinPrice > tempMaxPrice) {
+  tempMinPrice = calculatedMinPrice;
+  tempMaxPrice = calculatedMaxPrice;
+}
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -563,20 +573,39 @@ class _ProductListScreenState extends State<ProductListScreen> {
                         ),
                         const SizedBox(height: 8),
                         // Price Slider
+                        // RangeSlider(
+                        //   values: RangeValues(tempMinPrice, tempMaxPrice),
+                        //   min: calculatedMinPrice,
+                        //   max: calculatedMaxPrice,
+                        //   divisions: 100,
+                        //   activeColor: const Color(0xFF9370DB),
+                        //   inactiveColor: Colors.grey[300]!,
+                        //   onChanged: (RangeValues values) {
+                        //     setModalState(() {
+                        //       tempMinPrice = values.start;
+                        //       tempMaxPrice = values.end;
+                        //     });
+                        //   },
+                        // ),
                         RangeSlider(
-                          values: RangeValues(tempMinPrice, tempMaxPrice),
-                          min: calculatedMinPrice,
-                          max: calculatedMaxPrice,
-                          divisions: 100,
-                          activeColor: const Color(0xFF9370DB),
-                          inactiveColor: Colors.grey[300]!,
-                          onChanged: (RangeValues values) {
-                            setModalState(() {
-                              tempMinPrice = values.start;
-                              tempMaxPrice = values.end;
-                            });
-                          },
-                        ),
+  values: RangeValues(
+    tempMinPrice,
+    tempMaxPrice,
+  ),
+  min: calculatedMinPrice,
+  max: calculatedMaxPrice,
+  divisions: (calculatedMaxPrice - calculatedMinPrice).toInt() > 0
+      ? (calculatedMaxPrice - calculatedMinPrice).toInt()
+      : 1,
+  activeColor: const Color(0xFF9370DB),
+  inactiveColor: Colors.grey[300]!,
+  onChanged: (RangeValues values) {
+    setModalState(() {
+      tempMinPrice = values.start;
+      tempMaxPrice = values.end;
+    });
+  },
+),
                         const SizedBox(height: 32),
                         // Size Section
                         const Text(
